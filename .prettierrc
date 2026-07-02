@@ -1,0 +1,11 @@
+{
+  "printWidth": 150,
+  "arrowParens": "always",
+  "endOfLine": "lf",
+  "importOrder": ["^@/(.*)$", "^[./]"],
+  "importOrderSeparation": true,
+  "importOrderSortSpecifiers": true,
+  "plugins": ["@trivago/prettier-plugin-sort-imports", "prettier-plugin-tailwindcss"],
+  "tailwindAttributes": ["classNames"],
+  "tailwindFunctions": ["clsx", "twMerge", "cn"]
+}

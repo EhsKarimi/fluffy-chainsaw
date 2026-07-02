@@ -1,0 +1,190 @@
+@config "../tailwind.config.ts";
+
+@layer theme, base, mantine, components, utilities;
+
+@import "tailwindcss";
+@import "@mantine/core/styles.layer.css";
+
+@theme {
+  --color-atisCyan-50: #e9fbfc;
+  --color-atisCyan-100: #d3f6f8;
+  --color-atisCyan-200: #a6ecf1;
+  --color-atisCyan-300: #76e0e8;
+  --color-atisCyan-400: #52d4dd;
+  --color-atisCyan-500: #37c0c8;
+  --color-atisCyan-600: #2faab2;
+  --color-atisCyan-700: #26878e;
+  --color-atisCyan-800: #206d73;
+  --color-atisCyan-900: #1e5a5f;
+}
+
+:root {
+  --atis-app-max-width: 1920px;
+  --atis-sidebar-width: 260px;
+}
+
+@font-face {
+  font-family: "Vazirmatn";
+  src: url("/fonts/Vazirmatn[wght].woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+html {
+  font-family: "Vazirmatn", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-atisCyan-500) transparent;
+}
+
+html:not(.atis-auth-page) {
+  scrollbar-gutter: stable;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+.atis-thin-scrollbar::-webkit-scrollbar,
+.overflow-auto::-webkit-scrollbar,
+.overflow-x-auto::-webkit-scrollbar,
+.overflow-y-auto::-webkit-scrollbar,
+.mantine-TableScrollContainer-scrollContainer::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+html::-webkit-scrollbar-track,
+body::-webkit-scrollbar-track,
+.atis-thin-scrollbar::-webkit-scrollbar-track,
+.overflow-auto::-webkit-scrollbar-track,
+.overflow-x-auto::-webkit-scrollbar-track,
+.overflow-y-auto::-webkit-scrollbar-track,
+.mantine-TableScrollContainer-scrollContainer::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+html::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb,
+.atis-thin-scrollbar::-webkit-scrollbar-thumb,
+.overflow-auto::-webkit-scrollbar-thumb,
+.overflow-x-auto::-webkit-scrollbar-thumb,
+.overflow-y-auto::-webkit-scrollbar-thumb,
+.mantine-TableScrollContainer-scrollContainer::-webkit-scrollbar-thumb {
+  background-color: var(--color-atisCyan-500);
+  border-radius: 999px;
+}
+
+html::-webkit-scrollbar-thumb:hover,
+body::-webkit-scrollbar-thumb:hover,
+.atis-thin-scrollbar::-webkit-scrollbar-thumb:hover,
+.overflow-auto::-webkit-scrollbar-thumb:hover,
+.overflow-x-auto::-webkit-scrollbar-thumb:hover,
+.overflow-y-auto::-webkit-scrollbar-thumb:hover,
+.mantine-TableScrollContainer-scrollContainer::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-atisCyan-600);
+}
+
+.atis-thin-scrollbar,
+.overflow-auto,
+.overflow-x-auto,
+.overflow-y-auto,
+.mantine-TableScrollContainer-scrollContainer {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-atisCyan-500) transparent;
+}
+
+body {
+  margin: 0;
+  background: #f8fafc;
+  font-family: "Vazirmatn", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+@layer components {
+  .app-page-container {
+    width: 100%;
+    max-width: min(100%, calc(var(--atis-app-max-width) - var(--atis-sidebar-width)));
+    margin-inline: auto;
+  }
+
+  .auth-hero-panel {
+    background:
+      radial-gradient(circle at top right, rgba(55, 192, 200, 0.36), transparent 34%),
+      linear-gradient(135deg, #0f172a, #164e63 55%, #0f766e);
+  }
+
+  .auth-hero-glow-soft {
+    background-color: rgba(103, 232, 249, 0.1);
+  }
+
+  .auth-hero-glow-strong {
+    background-color: rgba(6, 182, 212, 0.2);
+  }
+
+  @media (max-width: 48rem) {
+    .app-page-container {
+      max-width: min(100%, var(--atis-app-max-width));
+    }
+  }
+}
+
+@layer components {
+  .atis-date-picker-calendar.rmdp-wrapper,
+  .atis-date-picker-calendar .rmdp-wrapper {
+    border: 1px solid rgb(226 232 240);
+    border-radius: 1rem;
+    box-shadow: 0 20px 40px rgb(15 23 42 / 14%);
+    font-family: "Vazirmatn", system-ui, sans-serif;
+  }
+
+  .atis-date-picker-calendar .rmdp-calendar,
+  .atis-date-picker-calendar.rmdp-wrapper .rmdp-calendar {
+    padding: 0.75rem;
+  }
+
+  .atis-date-picker-calendar .rmdp-header-values,
+  .atis-date-picker-calendar.rmdp-wrapper .rmdp-header-values {
+    color: rgb(15 23 42);
+    font-weight: 800;
+  }
+
+  .atis-date-picker-calendar .rmdp-week-day,
+  .atis-date-picker-calendar.rmdp-wrapper .rmdp-week-day {
+    color: var(--color-atisCyan-700);
+    font-weight: 800;
+  }
+
+  .atis-date-picker-calendar .rmdp-arrow,
+  .atis-date-picker-calendar.rmdp-wrapper .rmdp-arrow {
+    border-color: var(--color-atisCyan-600);
+  }
+
+  .atis-date-picker-calendar .rmdp-arrow-container:hover,
+  .atis-date-picker-calendar.rmdp-wrapper .rmdp-arrow-container:hover {
+    background-color: var(--color-atisCyan-50);
+    box-shadow: none;
+  }
+
+  .atis-date-picker-calendar .rmdp-day.rmdp-selected span,
+  .atis-date-picker-calendar.rmdp-wrapper .rmdp-day.rmdp-selected span {
+    background-color: var(--color-atisCyan-500);
+    box-shadow: 0 4px 10px rgb(55 192 200 / 28%);
+  }
+
+  .atis-date-picker-calendar .rmdp-day:not(.rmdp-disabled, .rmdp-day-hidden) span:hover,
+  .atis-date-picker-calendar.rmdp-wrapper .rmdp-day:not(.rmdp-disabled, .rmdp-day-hidden) span:hover {
+    background-color: var(--color-atisCyan-50);
+    color: var(--color-atisCyan-800);
+  }
+}
