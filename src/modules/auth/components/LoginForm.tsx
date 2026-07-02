@@ -12,6 +12,7 @@ import { AuthTexts } from "@/modules/auth/constants/AuthTexts";
 import { mockAuthUsers } from "@/modules/auth/constants/mock-users";
 import { useAuth } from "@/modules/auth/context/useAuth";
 import { type LoginValues } from "@/modules/auth/types/auth.types";
+import { getPublicAssetUrl } from "@/shared/utils/getPublicAssetUrl";
 
 export function LoginForm() {
   const navigate = useNavigate();
@@ -46,7 +47,7 @@ export function LoginForm() {
 
           <div className="relative z-10 flex items-center gap-4">
             <div className="flex h-20 w-20 items-center justify-center rounded-3xl bg-white/95 p-3 shadow-2xl shadow-cyan-950/30">
-              <Image src="/images/logo.png" alt={SharedTexts.BrandName} fit="contain" fallbackSrc="/favicon.svg" />
+              <Image src={getPublicAssetUrl("images/logo.png")} alt={SharedTexts.BrandName} fit="contain" fallbackSrc={getPublicAssetUrl("favicon.svg")} />
             </div>
             <div>
               <Text size="xl" fw={800}>
@@ -82,7 +83,7 @@ export function LoginForm() {
           <Box className="w-full max-w-auth-form">
             <div className="mb-8 flex flex-col items-center text-center lg:hidden">
               <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-3xl bg-white p-3 shadow-md ring-1 ring-slate-200">
-                <Image src="/images/logo.png" alt={SharedTexts.BrandName} fit="contain" fallbackSrc="/favicon.svg" />
+                <Image src={getPublicAssetUrl("images/logo.png")} alt={SharedTexts.BrandName} fit="contain" fallbackSrc={getPublicAssetUrl("favicon.svg")} />
               </div>
               <Title order={2}>{SharedTexts.BrandName}</Title>
               <Text c="dimmed">{SharedTexts.BrandDescription}</Text>

@@ -8,6 +8,7 @@ import { useAuth } from "@/modules/auth/context/useAuth";
 import { AppCommandModal } from "@/shared/components/layout/AppCommandModal";
 import { SharedTexts } from "@/shared/constants/SharedTexts";
 import { cn } from "@/shared/utils/style";
+import { getPublicAssetUrl } from "@/shared/utils/getPublicAssetUrl";
 
 type AppHeaderProps = {
   mobileOpened: boolean;
@@ -49,7 +50,7 @@ export function AppHeader({ mobileOpened, onToggleMobileMenu }: AppHeaderProps) 
         />
 
         <div className="hidden h-11 w-11 items-center justify-center rounded-2xl bg-white p-1.5 ring-1 ring-slate-200 sm:flex">
-          <Image src="/images/logo.png" alt={SharedTexts.BrandName} fit="contain" fallbackSrc="/favicon.svg" />
+          <Image src={getPublicAssetUrl("images/logo.png")} alt={SharedTexts.BrandName} fit="contain" fallbackSrc={getPublicAssetUrl("favicon.svg")} />
         </div>
 
         <div>
