@@ -8,6 +8,7 @@ import { useAppForm } from "@/shared/components/form/form";
 import { requestScrollToFirstFormError } from "@/shared/components/form/scrollToFirstFormError";
 import { validateRequiredText } from "@/shared/components/form/validators";
 import { SharedTexts } from "@/shared/constants/SharedTexts";
+import { getMantineCountyOptions, mantineProvinceOptions } from "@/shared/utils/iran-location";
 
 type CustomerFormValues = Omit<CustomerRecord, "id">;
 
@@ -79,6 +80,7 @@ const isShaftSuspendedOptions = toOptions(SharedTexts.IsShaftSuspended.Options);
 const canPitBeDemolishedOptions = toOptions(SharedTexts.CanPitBeDemolished.Options);
 const isShaftSurroundingOpenOptions = toOptions(SharedTexts.IsShaftSurroundingOpen.Options);
 const shaftSurroundingCoveringTypeOptions = toOptions(SharedTexts.ShaftSurroundingCoveringType.Options);
+const salesExpertOptions = toOptions(CrmTexts.Customers.SalesExpertOptions);
 
 export function CustomerFormPage({ customer, onCancel, onSubmit }: CustomerFormPageProps) {
   const isEditMode = Boolean(customer);
@@ -150,9 +152,39 @@ export function CustomerFormPage({ customer, onCancel, onSubmit }: CustomerFormP
               {(field) => <field.TextInputField dir="ltr" label={SharedTexts.Email} placeholder={SharedTexts.Email} />}
             </form.AppField>
 
-            <form.AppField name="city">
-              {(field) => <field.TextInputField label={CrmTexts.Customers.Table.City} placeholder={CrmTexts.Customers.Table.City} />}
+            <form.AppField name="provinceId">
+              {(field) => (
+                <field.SelectField
+                  label={SharedTexts.Province}
+                  placeholder={CrmTexts.Customers.Form.ProvincePlaceholder}
+                  data={mantineProvinceOptions}
+                  searchable
+                  clearable
+                  comboboxProps={{ withinPortal: true }}
+                  onChange={() => {
+                    form.setFieldValue("countyId", "");
+                  }}
+                />
+              )}
             </form.AppField>
+
+            <form.Subscribe selector={(state) => state.values.provinceId}>
+              {(provinceId) => (
+                <form.AppField name="countyId">
+                  {(field) => (
+                    <field.SelectField
+                      label={SharedTexts.County}
+                      placeholder={provinceId ? CrmTexts.Customers.Form.CountyPlaceholder : CrmTexts.Customers.Filters.CountyDisabledPlaceholder}
+                      data={getMantineCountyOptions(provinceId)}
+                      searchable
+                      clearable
+                      disabled={!provinceId}
+                      comboboxProps={{ withinPortal: true }}
+                    />
+                  )}
+                </form.AppField>
+              )}
+            </form.Subscribe>
 
             <form.AppField name="projectAddress">
               {(field) => <field.TextInputField label={SharedTexts.ProjectAddress} placeholder={SharedTexts.ProjectAddress} />}
@@ -299,7 +331,15 @@ export function CustomerFormPage({ customer, onCancel, onSubmit }: CustomerFormP
             </form.AppField>
 
             <form.AppField name="salesExpert">
-              {(field) => <field.TextInputField label={CrmTexts.Customers.Table.SalesExpert} placeholder={CrmTexts.Customers.Form.SalesExpertPlaceholder} />}
+              {(field) => (
+                <field.SelectField
+                  label={CrmTexts.Customers.Table.SalesExpert}
+                  placeholder={CrmTexts.Customers.Form.SalesExpertPlaceholder}
+                  data={salesExpertOptions}
+                  clearable
+                  comboboxProps={{ withinPortal: true }}
+                />
+              )}
             </form.AppField>
 
             <form.AppField name="status">

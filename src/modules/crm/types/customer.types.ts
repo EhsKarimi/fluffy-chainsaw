@@ -14,7 +14,8 @@ export type CustomerRecord = {
   contactNumber: string;
   email: string;
   projectAddress: string;
-  city: string;
+  provinceId: string;
+  countyId: string;
   source: string;
   salesExpert: string;
   status: CustomerStatus;
