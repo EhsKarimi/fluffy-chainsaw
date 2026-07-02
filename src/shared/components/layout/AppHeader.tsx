@@ -49,8 +49,13 @@ export function AppHeader({ mobileOpened, onToggleMobileMenu }: AppHeaderProps) 
           aria-label={mobileOpened ? SharedTexts.Layout.CloseMobileMenuLabel : SharedTexts.Layout.MobileMenuLabel}
         />
 
-        <div className="hidden h-11 w-11 items-center justify-center rounded-2xl bg-white p-1.5 ring-1 ring-slate-200 sm:flex">
-          <Image src={getPublicAssetUrl("images/logo.png")} alt={SharedTexts.BrandName} fit="contain" fallbackSrc={getPublicAssetUrl("favicon.svg")} />
+        <div className="hidden h-32 w-32 sm:flex">
+          <Image
+            src={getPublicAssetUrl("images/logo.png")}
+            alt={SharedTexts.BrandName}
+            fit="contain"
+            fallbackSrc={getPublicAssetUrl("favicon.svg")}
+          />
         </div>
 
         <div>
@@ -74,7 +79,14 @@ export function AppHeader({ mobileOpened, onToggleMobileMenu }: AppHeaderProps) 
         </Button>
         <div className="sm:hidden">
           <Tooltip label={SharedTexts.CommandPalette.OpenButtonLabel}>
-            <ActionIcon variant="light" color="atisCyan" radius="xl" size="lg" aria-label={SharedTexts.CommandPalette.OpenButtonLabel} onClick={openCommandModal}>
+            <ActionIcon
+              variant="light"
+              color="atisCyan"
+              radius="xl"
+              size="lg"
+              aria-label={SharedTexts.CommandPalette.OpenButtonLabel}
+              onClick={openCommandModal}
+            >
               <IconCommand size={18} />
             </ActionIcon>
           </Tooltip>
@@ -87,7 +99,7 @@ export function AppHeader({ mobileOpened, onToggleMobileMenu }: AppHeaderProps) 
             <UnstyledButton
               className={cn(
                 "rounded-2xl border border-slate-200 bg-slate-50 px-2 py-1.5 transition hover:bg-slate-100",
-                "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-atisCyan-500",
+                "focus-visible:outline-atisCyan-500 focus-visible:outline-2 focus-visible:outline-offset-2",
               )}
             >
               <Group gap="sm" wrap="nowrap">

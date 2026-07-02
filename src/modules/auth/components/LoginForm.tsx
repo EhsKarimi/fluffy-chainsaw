@@ -1,11 +1,11 @@
 import { Alert, Box, Group, Image, Paper, Stack, Text, ThemeIcon, Title } from "@mantine/core";
-import { IconBuildingSkyscraper, IconInfoCircle, IconLock, IconUser } from "@tabler/icons-react";
+import { IconInfoCircle, IconKey, IconLock, IconUser } from "@tabler/icons-react";
 import { useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 
 import { useAppForm } from "@/shared/components/form/form";
 import { requestScrollToFirstFormError } from "@/shared/components/form/scrollToFirstFormError";
-import { AppBadge } from "@/shared/components/ui/AppBadge";
+
 import { SharedTexts } from "@/shared/constants/SharedTexts";
 
 import { AuthTexts } from "@/modules/auth/constants/AuthTexts";
@@ -40,29 +40,20 @@ export function LoginForm() {
 
   return (
     <main className="min-h-screen bg-slate-50 text-slate-900" dir="rtl">
-      <div className="grid min-h-screen grid-cols-1 lg:grid-cols-auth-panel">
-        <section className="auth-hero-panel relative hidden overflow-hidden p-12 text-white lg:flex lg:flex-col lg:justify-between">
+      <div className="lg:grid-cols-auth-panel grid min-h-screen grid-cols-1">
+        <section className="auth-hero-panel relative hidden overflow-hidden p-12 text-white lg:flex lg:flex-col lg:items-center lg:justify-center lg:gap-10">
           <div className="auth-hero-glow-soft absolute top-20 -left-20 h-64 w-64 rounded-full blur-3xl" />
           <div className="auth-hero-glow-strong absolute right-10 bottom-0 h-72 w-72 rounded-full blur-3xl" />
 
-          <div className="relative z-10 flex items-center gap-4">
-            <div className="flex h-20 w-20 items-center justify-center rounded-3xl bg-white/95 p-3 shadow-2xl shadow-cyan-950/30">
-              <Image src={getPublicAssetUrl("images/logo.png")} alt={SharedTexts.BrandName} fit="contain" fallbackSrc={getPublicAssetUrl("favicon.svg")} />
-            </div>
-            <div>
-              <Text size="xl" fw={800}>
-                {SharedTexts.BrandName}
-              </Text>
-              <Text size="sm" c="cyan.0">
-                {SharedTexts.BrandDescription}
-              </Text>
+          <div className="flex justify-center">
+            <div className="w-[40%]">
+              <Image src={getPublicAssetUrl("images/logo.png")} alt={SharedTexts.BrandName} fit="contain" />
             </div>
           </div>
 
-          <Stack className="relative z-10 max-w-xl" gap="xl">
-            <AppBadge size="lg">ERP</AppBadge>
+          <Stack className="relative z-10 max-w-2xl" gap="xl">
             <div>
-              <Title order={1} className="text-4xl leading-auth-title font-black xl:text-5xl">
+              <Title order={1} className="leading-auth-title text-4xl font-black xl:text-4xl">
                 {AuthTexts.Login.HeroTitle}
               </Title>
               <Text mt="lg" size="lg" c="cyan.0" className="leading-8">
@@ -73,17 +64,22 @@ export function LoginForm() {
 
           <Group className="relative z-10" gap="md">
             <ThemeIcon size="xl" radius="xl" variant="light" color="atisCyan">
-              <IconBuildingSkyscraper size={24} />
+              <IconKey size={24} />
             </ThemeIcon>
             <Text c="cyan.0">{AuthTexts.Login.RememberedSessionHint}</Text>
           </Group>
         </section>
 
         <section className="flex min-h-screen items-center justify-center bg-slate-50 px-4 py-8 sm:px-6 lg:px-10">
-          <Box className="w-full max-w-auth-form">
+          <Box className="max-w-auth-form w-full">
             <div className="mb-8 flex flex-col items-center text-center lg:hidden">
               <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-3xl bg-white p-3 shadow-md ring-1 ring-slate-200">
-                <Image src={getPublicAssetUrl("images/logo.png")} alt={SharedTexts.BrandName} fit="contain" fallbackSrc={getPublicAssetUrl("favicon.svg")} />
+                <Image
+                  src={getPublicAssetUrl("images/logo.png")}
+                  alt={SharedTexts.BrandName}
+                  fit="contain"
+                  fallbackSrc={getPublicAssetUrl("favicon.svg")}
+                />
               </div>
               <Title order={2}>{SharedTexts.BrandName}</Title>
               <Text c="dimmed">{SharedTexts.BrandDescription}</Text>
@@ -91,12 +87,10 @@ export function LoginForm() {
 
             <Paper radius="xl" p={{ base: "lg", sm: "xl" }} shadow="xl" className="border border-slate-200/80 bg-white/95">
               <Stack gap="xl">
-                <Stack gap={6} ta="right">
-                  <Title order={2}>{AuthTexts.Login.Title}</Title>
-                  <Text c="dimmed" size="sm">
-                    {AuthTexts.Login.Subtitle}
-                  </Text>
-                </Stack>
+                <div className="flex flex-col items-center gap-2">
+                  <p className="text-xl font-bold">{AuthTexts.Login.Title}</p>
+                  <p className="text-sm">{AuthTexts.Login.Subtitle}</p>
+                </div>
 
                 {authError ? (
                   <Alert color="red" radius="md" icon={<IconInfoCircle size={18} />}>
