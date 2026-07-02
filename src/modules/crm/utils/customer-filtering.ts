@@ -58,7 +58,10 @@ function normalizeText(value: string) {
 }
 
 function normalizeNumber(value: string) {
-  const normalizedValue = value.replace(/[۰-۹٠-٩]/g, (digit) => PERSIAN_ARABIC_DIGITS[digit] ?? digit).replace(/[^0-9.-]/g, "").trim();
+  const normalizedValue = value
+    .replace(/[۰-۹٠-٩]/g, (digit) => PERSIAN_ARABIC_DIGITS[digit] ?? digit)
+    .replace(/[^0-9.-]/g, "")
+    .trim();
 
   if (!normalizedValue) {
     return undefined;
@@ -71,6 +74,7 @@ function normalizeNumber(value: string) {
 
 function normalizeDate(value: string) {
   const normalizedValue = value.replace(/[۰-۹٠-٩]/g, (digit) => PERSIAN_ARABIC_DIGITS[digit] ?? digit).replace(/[^0-9/.-]/g, "");
+  // eslint-disable-next-line no-useless-escape
   const parts = normalizedValue.split(/[/.\-]/).filter(Boolean);
 
   if (parts.length !== 3) {
