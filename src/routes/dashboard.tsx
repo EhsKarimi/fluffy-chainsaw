@@ -1,11 +1,11 @@
 import { Card, Group, SimpleGrid, Stack, Text, ThemeIcon, Title } from "@mantine/core";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 
 import { RequirePermission } from "@/modules/auth/components/RequirePermission";
 import { useAuth } from "@/modules/auth/context/useAuth";
-import { PermissionKeys } from "@/modules/auth/types/auth.types";
+import { PermissionKeys, type AuthRole } from "@/modules/auth/types/auth.types";
 import { AppBadge } from "@/shared/components/ui/AppBadge";
-import { erpModules } from "@/shared/constants/erp-modules";
+import { erpModules, type ErpModuleItem } from "@/shared/constants/erp-modules";
 import { SharedTexts } from "@/shared/constants/SharedTexts";
 
 export const Route = createFileRoute("/dashboard")({
@@ -20,8 +20,18 @@ function DashboardRoute() {
   );
 }
 
+
+function userCanSeeErpModule(erpModule: ErpModuleItem, userRole: AuthRole | undefined) {
+  return Boolean(userRole && erpModule.allowedRoles.includes(userRole));
+}
+
+function submenuIsAllowed(submenu: ErpModuleItem["submenus"][number], hasPermission: ReturnType<typeof useAuth>["hasPermission"]) {
+  return submenu.permission ? hasPermission(submenu.permission) : true;
+}
+
 function DashboardPage() {
-  const { user } = useAuth();
+  const { hasPermission, user } = useAuth();
+  const visibleErpModules = erpModules.filter((erpModule) => userCanSeeErpModule(erpModule, user?.role));
 
   return (
     <Stack gap="xl" dir="rtl">
@@ -40,8 +50,9 @@ function DashboardPage() {
       </Group>
 
       <SimpleGrid cols={{ base: 1, sm: 2, lg: 3, xl: 4 }} spacing="md">
-        {erpModules.map((erpModule) => {
+        {visibleErpModules.map((erpModule) => {
           const Icon = erpModule.icon;
+          const visibleSubmenus = erpModule.submenus.filter((submenu) => submenuIsAllowed(submenu, hasPermission)).slice(0, 3);
 
           return (
             <Card
@@ -78,11 +89,19 @@ function DashboardPage() {
                 </Text>
 
                 <Group gap="xs">
-                  {erpModule.submenus.slice(0, 3).map((submenu) => (
-                    <AppBadge key={submenu.id} tone="gray" variant="outline" className="font-medium">
-                      {submenu.label}
-                    </AppBadge>
-                  ))}
+                  {visibleSubmenus.map((submenu) =>
+                    submenu.href ? (
+                      <Link key={submenu.id} to={submenu.href} className="inline-flex no-underline transition duration-200 hover:-translate-y-0.5">
+                        <AppBadge tone="gray" variant="outline" className="font-medium transition duration-200 hover:border-atisCyan-300 hover:text-atisCyan-700">
+                          {submenu.label}
+                        </AppBadge>
+                      </Link>
+                    ) : (
+                      <AppBadge key={submenu.id} tone="gray" variant="outline" className="font-medium">
+                        {submenu.label}
+                      </AppBadge>
+                    ),
+                  )}
                 </Group>
               </Stack>
             </Card>

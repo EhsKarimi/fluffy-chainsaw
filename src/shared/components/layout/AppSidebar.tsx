@@ -4,6 +4,7 @@ import { Link, useLocation } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 
 import { useAuth } from "@/modules/auth/context/useAuth";
+import { type AuthRole } from "@/modules/auth/types/auth.types";
 import { AppBadge } from "@/shared/components/ui/AppBadge";
 import { SharedTexts } from "@/shared/constants/SharedTexts";
 import { navigationItems } from "@/shared/constants/navigation-items";
@@ -14,9 +15,17 @@ type AppSidebarProps = {
   onNavigate?: () => void;
 };
 
-function itemIsAllowed(item: NavigationItem, hasPermission: ReturnType<typeof useAuth>["hasPermission"]): boolean {
+function roleCanSeeItem(item: NavigationItem, userRole: AuthRole | undefined) {
+  return !item.allowedRoles?.length || Boolean(userRole && item.allowedRoles.includes(userRole));
+}
+
+function itemIsAllowed(item: NavigationItem, hasPermission: ReturnType<typeof useAuth>["hasPermission"], userRole: AuthRole | undefined): boolean {
+  if (!roleCanSeeItem(item, userRole)) {
+    return false;
+  }
+
   if (item.children?.length) {
-    return item.children.some((child) => itemIsAllowed(child, hasPermission));
+    return item.children.some((child) => itemIsAllowed(child, hasPermission, userRole));
   }
 
   return item.permission ? hasPermission(item.permission) : true;
@@ -77,10 +86,10 @@ function filterNavigationItems(items: NavigationItem[], normalizedSearchValue: s
 }
 
 export function AppSidebar({ onNavigate }: AppSidebarProps) {
-  const { hasPermission } = useAuth();
+  const { hasPermission, user } = useAuth();
   const pathname = useLocation({ select: (location) => location.pathname });
   const [searchValue, setSearchValue] = useState("");
-  const allowedNavigationItems = useMemo(() => navigationItems.filter((item) => itemIsAllowed(item, hasPermission)), [hasPermission]);
+  const allowedNavigationItems = useMemo(() => navigationItems.filter((item) => itemIsAllowed(item, hasPermission, user?.role)), [hasPermission, user?.role]);
   const normalizedSearchValue = normalizeSearchValue(searchValue);
   const visibleNavigationItems = useMemo(
     () => filterNavigationItems(allowedNavigationItems, normalizedSearchValue),
@@ -122,7 +131,7 @@ export function AppSidebar({ onNavigate }: AppSidebarProps) {
 
           <Collapse expanded={isOpen} transitionDuration={220} transitionTimingFunction="ease">
             <div className="mr-2 space-y-1 border-r border-slate-200">
-              {item.children?.filter((child) => itemIsAllowed(child, hasPermission)).map((child) => renderNavigationItem(child, depth + 1))}
+              {item.children?.filter((child) => itemIsAllowed(child, hasPermission, user?.role)).map((child) => renderNavigationItem(child, depth + 1))}
             </div>
           </Collapse>
         </div>

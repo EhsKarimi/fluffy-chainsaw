@@ -33,7 +33,7 @@ import {
 } from "@tabler/icons-react";
 import { type ComponentType } from "react";
 
-import { PermissionKeys, type PermissionKey } from "@/modules/auth/types/auth.types";
+import { PermissionKeys, type AuthRole, type PermissionKey } from "@/modules/auth/types/auth.types";
 import { type NavigationPath } from "@/shared/types/navigation.types";
 
 type ErpModuleSubmenu = {
@@ -51,6 +51,7 @@ export type ErpModuleItem = {
   icon: ComponentType<{ size?: number; stroke?: number }>;
   accent: string;
   featured?: boolean;
+  allowedRoles: AuthRole[];
   submenus: ErpModuleSubmenu[];
 };
 
@@ -61,6 +62,7 @@ export const erpModules = [
     description: "مدیریت چرخه کامل کارکنان",
     icon: IconUsersGroup,
     accent: "from-cyan-50 to-sky-50 text-cyan-700",
+    allowedRoles: ["admin"],
     submenus: [
       { id: "employees", label: "پرونده کارکنان", icon: IconUsers },
       { id: "attendance", label: "حضور و غیاب", icon: IconCalendarStats },
@@ -74,6 +76,7 @@ export const erpModules = [
     icon: IconHeartHandshake,
     accent: "from-teal-50 to-cyan-50 text-teal-700",
     featured: true,
+    allowedRoles: ["admin", "sales"],
     submenus: [
       { id: "customers", label: "مشتریان", icon: IconUsers, href: "/crm/customers", permission: PermissionKeys.CrmCustomersView },
       { id: "projects", label: "پروژه‌ها", icon: IconFolderCog, href: "/crm/projects", permission: PermissionKeys.CrmProjectsView },
@@ -86,6 +89,7 @@ export const erpModules = [
     description: "مدیریت فرآیندهای تولیدی",
     icon: IconBuildingFactory2,
     accent: "from-orange-50 to-amber-50 text-orange-700",
+    allowedRoles: ["admin"],
     submenus: [
       { id: "bom", label: "ساختار محصول", icon: IconClipboardList },
       { id: "work-orders", label: "دستور تولید", icon: IconSettingsAutomation },
@@ -98,6 +102,7 @@ export const erpModules = [
     description: "از تأمین‌کننده تا مشتری نهایی",
     icon: IconTruckDelivery,
     accent: "from-indigo-50 to-blue-50 text-indigo-700",
+    allowedRoles: ["admin"],
     submenus: [
       { id: "suppliers", label: "تأمین‌کنندگان", icon: IconBuildingStore },
       { id: "inbound", label: "ورودی کالا", icon: IconPackageImport },
@@ -110,6 +115,7 @@ export const erpModules = [
     description: "کنترل دقیق موجودی کالاها",
     icon: IconBuildingWarehouse,
     accent: "from-emerald-50 to-green-50 text-emerald-700",
+    allowedRoles: ["admin"],
     submenus: [
       { id: "stock", label: "موجودی لحظه‌ای", icon: IconBuildingWarehouse },
       { id: "counting", label: "انبارگردانی", icon: IconChecklist },
@@ -122,6 +128,7 @@ export const erpModules = [
     description: "مدیریت چرخه کامل فروش",
     icon: IconShoppingCart,
     accent: "from-rose-50 to-pink-50 text-rose-700",
+    allowedRoles: ["admin"],
     submenus: [
       { id: "quotes", label: "پیش‌فاکتور و پیشنهاد قیمت", icon: IconFileInvoice },
       { id: "orders", label: "سفارش فروش", icon: IconShoppingCartPlus },
@@ -134,6 +141,7 @@ export const erpModules = [
     description: "کمپین‌ها و جذب مشتری",
     icon: IconSpeakerphone,
     accent: "from-purple-50 to-fuchsia-50 text-purple-700",
+    allowedRoles: ["admin"],
     submenus: [
       { id: "campaigns", label: "کمپین‌ها", icon: IconSpeakerphone },
       { id: "leads", label: "سرنخ‌ها", icon: IconTargetArrow },
@@ -146,6 +154,7 @@ export const erpModules = [
     description: "مدیریت تأمین کالا و خدمات",
     icon: IconShoppingBag,
     accent: "from-lime-50 to-emerald-50 text-lime-700",
+    allowedRoles: ["admin"],
     submenus: [
       { id: "requests", label: "درخواست خرید", icon: IconShoppingBag },
       { id: "purchase-orders", label: "سفارش خرید", icon: IconShoppingBagCheck },
@@ -158,6 +167,7 @@ export const erpModules = [
     description: "برنامه‌ریزی و اجرای پروژه‌ها",
     icon: IconTimelineEvent,
     accent: "from-slate-50 to-zinc-50 text-slate-700",
+    allowedRoles: ["admin"],
     submenus: [
       { id: "planning", label: "برنامه زمان‌بندی", icon: IconTimelineEvent },
       { id: "tasks", label: "وظایف و فعالیت‌ها", icon: IconClipboardList },
@@ -170,6 +180,7 @@ export const erpModules = [
     description: "تحلیل داده‌ها و گزارش‌های مدیریتی",
     icon: IconChartPie,
     accent: "from-blue-50 to-cyan-50 text-blue-700",
+    allowedRoles: ["admin"],
     submenus: [
       { id: "reports", label: "گزارش‌های مدیریتی", icon: IconReportAnalytics, href: "/reports", permission: PermissionKeys.ReportsView },
       { id: "data-quality", label: "کیفیت داده", icon: IconFileAnalytics },
@@ -181,6 +192,7 @@ export const erpModules = [
     description: "پشتیبانی و گارانتی",
     icon: IconHeadset,
     accent: "from-cyan-50 to-teal-50 text-cyan-700",
+    allowedRoles: ["admin"],
     submenus: [
       { id: "tickets", label: "تیکت‌های پشتیبانی", icon: IconHeadset },
       { id: "warranty", label: "گارانتی و سرویس", icon: IconTool },

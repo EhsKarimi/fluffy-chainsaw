@@ -90,6 +90,7 @@ function CustomersPage() {
 
   useEffect(() => {
     if (page > totalPages) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setPage(totalPages);
     }
   }, [page, totalPages]);
@@ -187,7 +188,11 @@ function CustomersPage() {
           </Button>
         </Group>
 
-        <CustomerFormPage customer={search.action === "edit" ? editingCustomer : null} onCancel={() => void navigateToCustomerList()} onSubmit={handleSubmitCustomer} />
+        <CustomerFormPage
+          customer={search.action === "edit" ? editingCustomer : null}
+          onCancel={() => void navigateToCustomerList()}
+          onSubmit={handleSubmitCustomer}
+        />
       </Stack>
     );
   }
@@ -202,7 +207,12 @@ function CustomersPage() {
           </Text>
         </div>
         <Group gap="sm">
-          <Button variant="light" leftSection={<IconFileSpreadsheet size={18} />} loading={isExportingCustomers} onClick={() => void handleExportCustomers()}>
+          <Button
+            variant="light"
+            leftSection={<IconFileSpreadsheet size={18} />}
+            loading={isExportingCustomers}
+            onClick={() => void handleExportCustomers()}
+          >
             {CrmTexts.Customers.Excel.ReceiveButton}
           </Button>
           {canCreateCustomer ? (
@@ -235,7 +245,7 @@ function CustomersPage() {
                   <Table.Th className="whitespace-nowrap">{CrmTexts.Customers.Table.NextStep}</Table.Th>
                   <Table.Th className="whitespace-nowrap">{CrmTexts.Customers.Table.EstimatedValue}</Table.Th>
                   <Table.Th className="whitespace-nowrap">{CrmTexts.Customers.Table.Status}</Table.Th>
-                  <Table.Th className="whitespace-nowrap text-center">{CrmTexts.Customers.Table.Actions}</Table.Th>
+                  <Table.Th className="text-center whitespace-nowrap">{CrmTexts.Customers.Table.Actions}</Table.Th>
                 </Table.Tr>
               </Table.Thead>
               <Table.Tbody>

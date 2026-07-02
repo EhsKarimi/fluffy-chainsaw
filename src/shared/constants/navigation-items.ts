@@ -12,6 +12,7 @@ const erpNavigationItems = erpModules.filter((erpModule) => erpModule.id !== "bi
       id: erpModule.id,
       label: erpModule.title,
       icon: erpModule.icon,
+      allowedRoles: erpModule.allowedRoles,
       children: erpModule.submenus.map((submenu) => ({
         id: `${erpModule.id}-${submenu.id}`,
         label: submenu.label,
