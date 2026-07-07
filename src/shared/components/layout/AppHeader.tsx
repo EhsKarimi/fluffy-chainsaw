@@ -1,4 +1,4 @@
-import { ActionIcon, Avatar, Burger, Button, Group, Image, Menu, Text, Tooltip, UnstyledButton } from "@mantine/core";
+import { ActionIcon, Avatar, Burger, Button, Menu, Tooltip, UnstyledButton } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconCommand, IconLogout, IconUserCircle } from "@tabler/icons-react";
 import { useNavigate } from "@tanstack/react-router";
@@ -7,8 +7,8 @@ import { AuthTexts } from "@/modules/auth/constants/AuthTexts";
 import { useAuth } from "@/modules/auth/context/useAuth";
 import { AppCommandModal } from "@/shared/components/layout/AppCommandModal";
 import { SharedTexts } from "@/shared/constants/SharedTexts";
-import { cn } from "@/shared/utils/style";
 import { getPublicAssetUrl } from "@/shared/utils/getPublicAssetUrl";
+import { cn } from "@/shared/utils/style";
 
 type AppHeaderProps = {
   mobileOpened: boolean;
@@ -40,7 +40,7 @@ export function AppHeader({ mobileOpened, onToggleMobileMenu }: AppHeaderProps) 
 
   return (
     <header className="flex h-full items-center justify-between gap-4 border-b border-slate-200 bg-white px-4 shadow-sm md:px-6" dir="rtl">
-      <Group gap="md" wrap="nowrap">
+      <div className="flex items-center gap-4">
         <Burger
           opened={mobileOpened}
           onClick={onToggleMobileMenu}
@@ -50,21 +50,12 @@ export function AppHeader({ mobileOpened, onToggleMobileMenu }: AppHeaderProps) 
         />
 
         <div className="hidden h-32 w-32 sm:flex">
-          <Image
-            src={getPublicAssetUrl("images/logo.png")}
-            alt={SharedTexts.BrandName}
-            fit="contain"
-            fallbackSrc={getPublicAssetUrl("favicon.svg")}
-          />
+          <img src={getPublicAssetUrl("images/logo.png")} alt={SharedTexts.BrandName} className="h-full w-full object-contain" />
         </div>
 
         <div>
-          <Text fw={800} size="sm" className="text-slate-900 sm:text-base">
-            {SharedTexts.Layout.HeaderTitle}
-          </Text>
-          <Text size="xs" c="dimmed" className="hidden sm:block">
-            {SharedTexts.Layout.HeaderSubtitle}
-          </Text>
+          <p className="text-sm font-extrabold text-slate-900 sm:text-base">{SharedTexts.Layout.HeaderTitle}</p>
+          <p className="hidden text-xs text-slate-500 sm:block">{SharedTexts.Layout.HeaderSubtitle}</p>
         </div>
 
         <Button
@@ -91,9 +82,9 @@ export function AppHeader({ mobileOpened, onToggleMobileMenu }: AppHeaderProps) 
             </ActionIcon>
           </Tooltip>
         </div>
-      </Group>
+      </div>
 
-      <Group gap="sm" wrap="nowrap">
+      <div className="flex items-center gap-2">
         <Menu width={240} position="bottom-start" shadow="lg" radius="lg" withArrow>
           <Menu.Target>
             <UnstyledButton
@@ -102,19 +93,15 @@ export function AppHeader({ mobileOpened, onToggleMobileMenu }: AppHeaderProps) 
                 "focus-visible:outline-atisCyan-500 focus-visible:outline-2 focus-visible:outline-offset-2",
               )}
             >
-              <Group gap="sm" wrap="nowrap">
+              <div className="flex items-center gap-2">
                 <div className="hidden text-right sm:block">
-                  <Text size="sm" fw={700} className="leading-5">
-                    {user?.fullName}
-                  </Text>
-                  <Text size="xs" c="dimmed" className="leading-4">
-                    {user?.roleLabel}
-                  </Text>
+                  <p className="text-sm leading-5 font-bold text-slate-900">{user?.fullName}</p>
+                  <p className="text-xs leading-4 text-slate-500">{user?.roleLabel}</p>
                 </div>
                 <Avatar color={user?.avatarColor ?? "atisCyan"} radius="xl">
                   {user ? getInitials(user.fullName) : SharedTexts.BrandInitial}
                 </Avatar>
-              </Group>
+              </div>
             </UnstyledButton>
           </Menu.Target>
 
@@ -129,7 +116,7 @@ export function AppHeader({ mobileOpened, onToggleMobileMenu }: AppHeaderProps) 
             </Menu.Item>
           </Menu.Dropdown>
         </Menu>
-      </Group>
+      </div>
 
       <AppCommandModal opened={commandModalOpened} onClose={closeCommandModal} />
     </header>

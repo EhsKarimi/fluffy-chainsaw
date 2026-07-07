@@ -1,17 +1,15 @@
-import { Alert, Box, Group, Image, Paper, Stack, Text, ThemeIcon, Title } from "@mantine/core";
+import { Alert, ThemeIcon } from "@mantine/core";
 import { IconInfoCircle, IconKey, IconLock, IconUser } from "@tabler/icons-react";
 import { useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-
-import { useAppForm } from "@/shared/components/form/form";
-import { requestScrollToFirstFormError } from "@/shared/components/form/scrollToFirstFormError";
-
-import { SharedTexts } from "@/shared/constants/SharedTexts";
 
 import { AuthTexts } from "@/modules/auth/constants/AuthTexts";
 import { mockAuthUsers } from "@/modules/auth/constants/mock-users";
 import { useAuth } from "@/modules/auth/context/useAuth";
 import { type LoginValues } from "@/modules/auth/types/auth.types";
+import { useAppForm } from "@/shared/components/form/form";
+import { requestScrollToFirstFormError } from "@/shared/components/form/scrollToFirstFormError";
+import { SharedTexts } from "@/shared/constants/SharedTexts";
 import { getPublicAssetUrl } from "@/shared/utils/getPublicAssetUrl";
 
 export function LoginForm() {
@@ -47,44 +45,35 @@ export function LoginForm() {
 
           <div className="flex justify-center">
             <div className="w-[40%]">
-              <Image src={getPublicAssetUrl("images/logo.png")} alt={SharedTexts.BrandName} fit="contain" />
+              <img src={getPublicAssetUrl("images/logo.png")} alt={SharedTexts.BrandName} className="h-full w-full object-contain" />
             </div>
           </div>
 
-          <Stack className="relative z-10 max-w-2xl" gap="xl">
+          <div className="relative z-10 max-w-2xl space-y-8">
             <div>
-              <Title order={1} className="leading-auth-title text-4xl font-black xl:text-4xl">
-                {AuthTexts.Login.HeroTitle}
-              </Title>
-              <Text mt="lg" size="lg" c="cyan.0" className="leading-8">
-                {AuthTexts.Login.HeroDescription}
-              </Text>
+              <h1 className="leading-auth-title text-4xl font-black xl:text-4xl">{AuthTexts.Login.HeroTitle}</h1>
+              <p className="mt-6 text-lg leading-8 text-cyan-50">{AuthTexts.Login.HeroDescription}</p>
             </div>
-          </Stack>
+          </div>
 
-          <Group className="relative z-10" gap="md">
+          <div className="relative z-10 flex items-center gap-4">
             <ThemeIcon size="xl" radius="xl" variant="light" color="atisCyan">
               <IconKey size={24} />
             </ThemeIcon>
-            <Text c="cyan.0">{AuthTexts.Login.RememberedSessionHint}</Text>
-          </Group>
+            <p className="text-cyan-50">{AuthTexts.Login.RememberedSessionHint}</p>
+          </div>
         </section>
 
         <section className="flex min-h-screen items-center justify-center bg-slate-50 px-4 py-8 sm:px-6 lg:px-10">
-          <Box className="max-w-auth-form w-full">
+          <div className="max-w-auth-form w-full">
             <div className="flex justify-center lg:hidden">
               <div className="mb-4 w-48">
-                <Image
-                  src={getPublicAssetUrl("images/logo.png")}
-                  alt={SharedTexts.BrandName}
-                  fit="contain"
-                  fallbackSrc={getPublicAssetUrl("favicon.svg")}
-                />
+                <img src={getPublicAssetUrl("images/logo.png")} alt={SharedTexts.BrandName} className="h-full w-full object-contain" />
               </div>
             </div>
 
-            <Paper radius="xl" p={{ base: "lg", sm: "xl" }} shadow="xl" className="border border-slate-200/80 bg-white/95">
-              <Stack gap="xl">
+            <section className="rounded-3xl border border-slate-200/80 bg-white/95 p-6 shadow-xl sm:p-8">
+              <div className="space-y-8">
                 <div className="flex flex-col items-center gap-2">
                   <p className="text-xl font-bold">{AuthTexts.Login.Title}</p>
                   <p className="text-sm">{AuthTexts.Login.Subtitle}</p>
@@ -149,30 +138,24 @@ export function LoginForm() {
                     </form.SubmitButton>
                   </form>
                 </form.AppForm>
-              </Stack>
-            </Paper>
+              </div>
+            </section>
 
-            <Paper mt="md" p="md" radius="lg" className="border border-dashed border-slate-300 bg-white/80">
-              <Stack gap="xs">
-                <Text size="sm" fw={700}>
-                  {AuthTexts.Login.DevelopmentUsersTitle}
-                </Text>
-                <Text size="xs" c="dimmed">
-                  {AuthTexts.Login.DevelopmentUsersDescription}
-                </Text>
+            <section className="mt-4 rounded-2xl border border-dashed border-slate-300 bg-white/80 p-4">
+              <div className="space-y-2">
+                <p className="text-sm font-bold text-slate-900">{AuthTexts.Login.DevelopmentUsersTitle}</p>
+                <p className="text-xs text-slate-500">{AuthTexts.Login.DevelopmentUsersDescription}</p>
                 {mockAuthUsers.map((mockUser) => (
-                  <Group key={mockUser.user.id} justify="space-between" gap="xs" className="rounded-lg bg-slate-50 px-3 py-2">
-                    <Text size="xs" fw={600}>
-                      {mockUser.user.username}
-                    </Text>
-                    <Text size="xs" c="dimmed" dir="ltr">
+                  <div key={mockUser.user.id} className="flex justify-between gap-2 rounded-lg bg-slate-50 px-3 py-2">
+                    <span className="text-xs font-semibold text-slate-900">{mockUser.user.username}</span>
+                    <span className="text-xs text-slate-500" dir="ltr">
                       {mockUser.password}
-                    </Text>
-                  </Group>
+                    </span>
+                  </div>
                 ))}
-              </Stack>
-            </Paper>
-          </Box>
+              </div>
+            </section>
+          </div>
         </section>
       </div>
     </main>

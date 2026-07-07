@@ -1,12 +1,12 @@
-import { Card, Group, SimpleGrid, Stack, Text, ThemeIcon, Title } from "@mantine/core";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { ThemeIcon } from "@mantine/core";
+import { Link, createFileRoute } from "@tanstack/react-router";
 
 import { RequirePermission } from "@/modules/auth/components/RequirePermission";
 import { useAuth } from "@/modules/auth/context/useAuth";
-import { PermissionKeys, type AuthRole } from "@/modules/auth/types/auth.types";
+import { type AuthRole, PermissionKeys } from "@/modules/auth/types/auth.types";
 import { AppBadge } from "@/shared/components/ui/AppBadge";
-import { erpModules, type ErpModuleItem } from "@/shared/constants/erp-modules";
 import { SharedTexts } from "@/shared/constants/SharedTexts";
+import { type ErpModuleItem, erpModules } from "@/shared/constants/erp-modules";
 
 export const Route = createFileRoute("/dashboard")({
   component: DashboardRoute,
@@ -19,7 +19,6 @@ function DashboardRoute() {
     </RequirePermission>
   );
 }
-
 
 function userCanSeeErpModule(erpModule: ErpModuleItem, userRole: AuthRole | undefined) {
   return Boolean(userRole && erpModule.allowedRoles.includes(userRole));
@@ -34,38 +33,33 @@ function DashboardPage() {
   const visibleErpModules = erpModules.filter((erpModule) => userCanSeeErpModule(erpModule, user?.role));
 
   return (
-    <Stack gap="xl" dir="rtl">
-      <Group justify="space-between" align="flex-start" gap="md">
+    <div className="space-y-8" dir="rtl">
+      <div className="flex flex-col justify-between gap-4 md:flex-row md:items-start">
         <div>
-          <Title order={1} className="text-slate-900">
-            {SharedTexts.Navigation.Dashboard}
-          </Title>
-          <Text c="dimmed" mt={6}>
+          <h1 className="text-2xl font-extrabold text-slate-900">{SharedTexts.Navigation.Dashboard}</h1>
+          <p className="mt-1.5 text-sm text-slate-500">
             {SharedTexts.Dashboard.WelcomePrefix} {user?.fullName}. {SharedTexts.Dashboard.WelcomeSuffix}
-          </Text>
+          </p>
         </div>
         <AppBadge size="lg" tone={user?.avatarColor === "blue" || user?.avatarColor === "teal" ? user.avatarColor : "atisCyan"}>
           {user?.roleLabel}
         </AppBadge>
-      </Group>
+      </div>
 
-      <SimpleGrid cols={{ base: 1, sm: 2, lg: 3, xl: 4 }} spacing="md">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {visibleErpModules.map((erpModule) => {
           const Icon = erpModule.icon;
           const visibleSubmenus = erpModule.submenus.filter((submenu) => submenuIsAllowed(submenu, hasPermission)).slice(0, 3);
 
           return (
-            <Card
+            <section
               key={erpModule.id}
-              radius="xl"
-              padding="lg"
-              shadow="sm"
-              className="group hover:border-atisCyan-500/60 relative overflow-hidden border border-slate-200 bg-white transition duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-cyan-100/70"
+              className="group hover:border-atisCyan-500/60 relative overflow-hidden rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-cyan-100/70"
             >
               <div className="bg-atisCyan-500 absolute inset-x-0 top-0 h-1 opacity-0 transition duration-300 group-hover:opacity-100" />
-              <Stack gap="md">
-                <Group justify="space-between" align="flex-start" gap="md" wrap="nowrap">
-                  <Group gap="sm" align="center" wrap="nowrap">
+              <div className="space-y-4">
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex items-center gap-3">
                     <ThemeIcon
                       size={44}
                       radius="xl"
@@ -76,23 +70,23 @@ function DashboardPage() {
                       <Icon size={24} />
                     </ThemeIcon>
 
-                    <Title order={3} className="text-base leading-7 text-slate-900">
-                      {erpModule.title}
-                    </Title>
-                  </Group>
+                    <h3 className="text-base leading-7 font-extrabold text-slate-900">{erpModule.title}</h3>
+                  </div>
 
                   {erpModule.featured ? <AppBadge>{SharedTexts.Dashboard.FeaturedModuleBadge}</AppBadge> : null}
-                </Group>
+                </div>
 
-                <Text size="sm" c="dimmed" className="leading-7">
-                  {erpModule.description}
-                </Text>
+                <p className="text-sm leading-7 text-slate-500">{erpModule.description}</p>
 
-                <Group gap="xs">
+                <div className="flex flex-wrap gap-2">
                   {visibleSubmenus.map((submenu) =>
                     submenu.href ? (
                       <Link key={submenu.id} to={submenu.href} className="inline-flex no-underline transition duration-200 hover:-translate-y-0.5">
-                        <AppBadge tone="gray" variant="outline" className="font-medium transition duration-200 hover:border-atisCyan-300 hover:text-atisCyan-700">
+                        <AppBadge
+                          tone="gray"
+                          variant="outline"
+                          className="hover:border-atisCyan-300 hover:text-atisCyan-700 font-medium transition duration-200"
+                        >
                           {submenu.label}
                         </AppBadge>
                       </Link>
@@ -102,12 +96,12 @@ function DashboardPage() {
                       </AppBadge>
                     ),
                   )}
-                </Group>
-              </Stack>
-            </Card>
+                </div>
+              </div>
+            </section>
           );
         })}
-      </SimpleGrid>
-    </Stack>
+      </div>
+    </div>
   );
 }

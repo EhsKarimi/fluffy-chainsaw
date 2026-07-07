@@ -1,4 +1,4 @@
-import { Card, Group, Progress, SimpleGrid, Stack, Text, Title } from "@mantine/core";
+import { Progress } from "@mantine/core";
 import { createFileRoute } from "@tanstack/react-router";
 
 import { RequirePermission } from "@/modules/auth/components/RequirePermission";
@@ -10,9 +10,9 @@ export const Route = createFileRoute("/reports")({
 });
 
 const mockReports = [
-  { title: "نرخ تبدیل مشتری به پروژه", value: "۶۲٪", progress: 62 },
-  { title: "پروژه‌های تایید شده فروش", value: "۴۱٪", progress: 41 },
-  { title: "درخواست‌های نیازمند بازدید", value: "۷۳٪", progress: 73 },
+  { title: "نرخ تبدیل مشتری به پروژه", value: "62٪", progress: 62 },
+  { title: "پروژه‌های تایید شده فروش", value: "41٪", progress: 41 },
+  { title: "درخواست‌های نیازمند بازدید", value: "73٪", progress: 73 },
 ];
 
 function ReportsRoute() {
@@ -25,25 +25,23 @@ function ReportsRoute() {
 
 function ReportsPage() {
   return (
-    <Stack gap="lg" dir="rtl">
+    <div className="space-y-6" dir="rtl">
       <div>
-        <Title order={1}>{SharedTexts.Navigation.Reports}</Title>
-        <Text c="dimmed" mt={6}>
-          گزارش‌های نمونه برای نمایش تفاوت دسترسی کاربران.
-        </Text>
+        <h1 className="text-2xl font-extrabold text-slate-900">{SharedTexts.Navigation.Reports}</h1>
+        <p className="mt-1.5 text-sm text-slate-500">گزارش‌های نمونه برای نمایش تفاوت دسترسی کاربران.</p>
       </div>
 
-      <SimpleGrid cols={{ base: 1, md: 3 }} spacing="lg">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
         {mockReports.map((report) => (
-          <Card key={report.title} radius="xl" padding="xl" shadow="sm" className="border border-slate-200 bg-white">
-            <Group justify="space-between" mb="lg">
-              <Text fw={700}>{report.title}</Text>
-              <Title order={3}>{report.value}</Title>
-            </Group>
+          <section key={report.title} className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm md:p-8">
+            <div className="mb-6 flex justify-between gap-4">
+              <p className="font-bold text-slate-900">{report.title}</p>
+              <h3 className="text-xl font-extrabold text-slate-900">{report.value}</h3>
+            </div>
             <Progress value={report.progress} radius="xl" />
-          </Card>
+          </section>
         ))}
-      </SimpleGrid>
-    </Stack>
+      </div>
+    </div>
   );
 }

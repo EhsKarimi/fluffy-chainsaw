@@ -2,6 +2,8 @@ import { createTheme } from "@mantine/core";
 
 import { atisCyan } from "@/shared/theme/color-tokens";
 
+const appFontFamily = '"Vazirmatn FD", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+
 export const mainTheme = createTheme({
   primaryColor: "atisCyan",
   primaryShade: { light: 5, dark: 5 },
@@ -9,9 +11,9 @@ export const mainTheme = createTheme({
   colors: {
     atisCyan: [...atisCyan],
   },
-  fontFamily: "Vazirmatn, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+  fontFamily: appFontFamily,
   headings: {
-    fontFamily: "Vazirmatn, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+    fontFamily: appFontFamily,
     fontWeight: "800",
   },
   components: {

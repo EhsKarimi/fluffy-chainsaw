@@ -1,4 +1,4 @@
-import { Button, Card, Group, SimpleGrid, Stack, Text, Title } from "@mantine/core";
+import { Button } from "@mantine/core";
 import { type ReactNode } from "react";
 
 import { CrmTexts } from "@/modules/crm/constants/CrmTexts";
@@ -49,21 +49,15 @@ function toOptions(options: readonly string[]) {
 
 function FormSection({ children, description, title }: FormSectionProps) {
   return (
-    <Card radius="xl" padding="lg" shadow="sm" className="border border-slate-200 bg-white">
-      <Stack gap="lg">
+    <section className="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm md:p-6">
+      <div className="space-y-6">
         <div>
-          <Title order={3} className="text-base font-black text-slate-900">
-            {title}
-          </Title>
-          {description ? (
-            <Text size="sm" c="dimmed" mt={4}>
-              {description}
-            </Text>
-          ) : null}
+          <h3 className="text-base font-black text-slate-900">{title}</h3>
+          {description ? <p className="mt-1 text-sm text-slate-500">{description}</p> : null}
         </div>
         {children}
-      </Stack>
-    </Card>
+      </div>
+    </section>
   );
 }
 
@@ -107,44 +101,76 @@ export function CustomerFormPage({ customer, onCancel, onSubmit }: CustomerFormP
         }}
       >
         <FormSection title={CrmTexts.Customers.Form.BasicInformationSection} description={CrmTexts.Customers.Form.BasicInformationDescription}>
-          <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing="md">
-            <form.AppField name="visitDate">
-              {(field) => <field.DatePickerField label={SharedTexts.VisitDate.Label} />}
-            </form.AppField>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <form.AppField name="visitDate">{(field) => <field.DatePickerField label={SharedTexts.VisitDate.Label} />}</form.AppField>
 
             <form.AppField name="visitCoordinationPhone">
-              {(field) => <field.TextInputField label={SharedTexts.VisitCoordinationPhone} placeholder={CrmTexts.Customers.Form.VisitPhonePlaceholder} />}
+              {(field) => (
+                <field.TextInputField label={SharedTexts.VisitCoordinationPhone} placeholder={CrmTexts.Customers.Form.VisitPhonePlaceholder} />
+              )}
             </form.AppField>
 
             <form.AppField name="referenceNumber">
-              {(field) => <field.TextInputField label={SharedTexts.ReferenceNumber} placeholder={CrmTexts.Customers.Form.ReferenceNumberPlaceholder} />}
+              {(field) => (
+                <field.TextInputField label={SharedTexts.ReferenceNumber} placeholder={CrmTexts.Customers.Form.ReferenceNumberPlaceholder} />
+              )}
             </form.AppField>
 
-            <form.AppField name="projectName" validators={{ onChange: ({ value }) => validateRequiredText(value), onBlur: ({ value }) => validateRequiredText(value), onSubmit: ({ value }) => validateRequiredText(value) }}>
+            <form.AppField
+              name="projectName"
+              validators={{
+                onChange: ({ value }) => validateRequiredText(value),
+                onBlur: ({ value }) => validateRequiredText(value),
+                onSubmit: ({ value }) => validateRequiredText(value),
+              }}
+            >
               {(field) => <field.TextInputField label={SharedTexts.ProjectName} placeholder={SharedTexts.ProjectName} required />}
             </form.AppField>
 
             <form.AppField name="projectExpertise">
-              {(field) => <field.TextInputField label={SharedTexts.ProjectExpertise} placeholder={CrmTexts.Customers.Form.ProjectExpertisePlaceholder} />}
+              {(field) => (
+                <field.TextInputField label={SharedTexts.ProjectExpertise} placeholder={CrmTexts.Customers.Form.ProjectExpertisePlaceholder} />
+              )}
             </form.AppField>
 
             <form.AppField name="reference">
               {(field) => <field.TextInputField label={SharedTexts.Reference} placeholder={CrmTexts.Customers.Form.ReferencePlaceholder} />}
             </form.AppField>
-          </SimpleGrid>
+          </div>
         </FormSection>
 
         <FormSection title={SharedTexts.EmployerSpecifications} description={CrmTexts.Customers.Form.EmployerInformationDescription}>
-          <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing="md">
-            <form.AppField name="employerName" validators={{ onChange: ({ value }) => validateRequiredText(value), onBlur: ({ value }) => validateRequiredText(value), onSubmit: ({ value }) => validateRequiredText(value) }}>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <form.AppField
+              name="employerName"
+              validators={{
+                onChange: ({ value }) => validateRequiredText(value),
+                onBlur: ({ value }) => validateRequiredText(value),
+                onSubmit: ({ value }) => validateRequiredText(value),
+              }}
+            >
               {(field) => <field.TextInputField label={SharedTexts.EmployerName} placeholder={SharedTexts.EmployerName} required />}
             </form.AppField>
 
-            <form.AppField name="requesterName" validators={{ onChange: ({ value }) => validateRequiredText(value), onBlur: ({ value }) => validateRequiredText(value), onSubmit: ({ value }) => validateRequiredText(value) }}>
+            <form.AppField
+              name="requesterName"
+              validators={{
+                onChange: ({ value }) => validateRequiredText(value),
+                onBlur: ({ value }) => validateRequiredText(value),
+                onSubmit: ({ value }) => validateRequiredText(value),
+              }}
+            >
               {(field) => <field.TextInputField label={SharedTexts.RequesterName} placeholder={SharedTexts.RequesterName} required />}
             </form.AppField>
 
-            <form.AppField name="contactNumber" validators={{ onChange: ({ value }) => validateRequiredText(value), onBlur: ({ value }) => validateRequiredText(value), onSubmit: ({ value }) => validateRequiredText(value) }}>
+            <form.AppField
+              name="contactNumber"
+              validators={{
+                onChange: ({ value }) => validateRequiredText(value),
+                onBlur: ({ value }) => validateRequiredText(value),
+                onSubmit: ({ value }) => validateRequiredText(value),
+              }}
+            >
               {(field) => <field.TextInputField label={SharedTexts.ContactNumber} placeholder={SharedTexts.ContactNumber} required />}
             </form.AppField>
 
@@ -189,12 +215,12 @@ export function CustomerFormPage({ customer, onCancel, onSubmit }: CustomerFormP
             <form.AppField name="projectAddress">
               {(field) => <field.TextInputField label={SharedTexts.ProjectAddress} placeholder={SharedTexts.ProjectAddress} />}
             </form.AppField>
-          </SimpleGrid>
+          </div>
         </FormSection>
 
         <FormSection title={SharedTexts.ProductSpecifications} description={CrmTexts.Customers.Form.ProductInformationDescription}>
-          <Stack gap="md">
-            <SimpleGrid cols={{ base: 1, sm: 2, lg: 4 }} spacing="md">
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
               <form.AppField name="numberOfUnits">
                 {(field) => <field.TextInputField label={SharedTexts.NumberOfUnits} placeholder={CrmTexts.Customers.Form.NumberPlaceholder} />}
               </form.AppField>
@@ -204,7 +230,9 @@ export function CustomerFormPage({ customer, onCancel, onSubmit }: CustomerFormP
               </form.AppField>
 
               <form.AppField name="elevatorType">
-                {(field) => <field.SelectField label={SharedTexts.ElevatorType.Label} data={elevatorTypeOptions} comboboxProps={{ withinPortal: true }} />}
+                {(field) => (
+                  <field.SelectField label={SharedTexts.ElevatorType.Label} data={elevatorTypeOptions} comboboxProps={{ withinPortal: true }} />
+                )}
               </form.AppField>
 
               <form.AppField name="capacity">
@@ -220,9 +248,11 @@ export function CustomerFormPage({ customer, onCancel, onSubmit }: CustomerFormP
               </form.AppField>
 
               <form.AppField name="requestedPackageType">
-                {(field) => <field.TextInputField label={SharedTexts.RequestedPackageType} placeholder={CrmTexts.Customers.Form.PackageTypePlaceholder} />}
+                {(field) => (
+                  <field.TextInputField label={SharedTexts.RequestedPackageType} placeholder={CrmTexts.Customers.Form.PackageTypePlaceholder} />
+                )}
               </form.AppField>
-            </SimpleGrid>
+            </div>
 
             <form.AppField name="usageTypes">
               {(field) => (
@@ -233,21 +263,29 @@ export function CustomerFormPage({ customer, onCancel, onSubmit }: CustomerFormP
                 />
               )}
             </form.AppField>
-          </Stack>
+          </div>
         </FormSection>
 
         <FormSection title={SharedTexts.DoorSpecifications}>
-          <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing="md">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <form.AppField name="doorType">
               {(field) => <field.SelectField label={SharedTexts.DoorType.Label} data={doorTypeOptions} comboboxProps={{ withinPortal: true }} />}
             </form.AppField>
 
             <form.AppField name="doorOpeningType">
-              {(field) => <field.SelectField label={SharedTexts.DoorOpeningType.Label} data={doorOpeningTypeOptions} comboboxProps={{ withinPortal: true }} />}
+              {(field) => (
+                <field.SelectField label={SharedTexts.DoorOpeningType.Label} data={doorOpeningTypeOptions} comboboxProps={{ withinPortal: true }} />
+              )}
             </form.AppField>
 
             <form.AppField name="floorDoorArrangement">
-              {(field) => <field.SelectField label={SharedTexts.FloorDoorArrangement.Label} data={floorDoorArrangementOptions} comboboxProps={{ withinPortal: true }} />}
+              {(field) => (
+                <field.SelectField
+                  label={SharedTexts.FloorDoorArrangement.Label}
+                  data={floorDoorArrangementOptions}
+                  comboboxProps={{ withinPortal: true }}
+                />
+              )}
             </form.AppField>
 
             <form.AppField name="doorWidth">
@@ -261,12 +299,12 @@ export function CustomerFormPage({ customer, onCancel, onSubmit }: CustomerFormP
             <form.AppField name="doorStainlessSteelType">
               {(field) => <field.TextInputField label={SharedTexts.DoorStainlessSteelType} placeholder={SharedTexts.DoorStainlessSteelType} />}
             </form.AppField>
-          </SimpleGrid>
+          </div>
         </FormSection>
 
         <FormSection title={SharedTexts.ShaftSpecifications}>
-          <Stack gap="md">
-            <SimpleGrid cols={{ base: 1, sm: 2, xl: 4 }} spacing="md">
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
               <form.AppField name="shaftIronwork">
                 {(field) => <field.RadioGroupField label={SharedTexts.ShaftIronwork.Label} data={shaftIronworkOptions} />}
               </form.AppField>
@@ -300,17 +338,21 @@ export function CustomerFormPage({ customer, onCancel, onSubmit }: CustomerFormP
               </form.AppField>
 
               <form.AppField name="pitHeightWithoutFlooring">
-                {(field) => <field.TextInputField label={SharedTexts.PitHeightWithoutFlooring} placeholder={CrmTexts.Customers.Form.MeterPlaceholder} />}
+                {(field) => (
+                  <field.TextInputField label={SharedTexts.PitHeightWithoutFlooring} placeholder={CrmTexts.Customers.Form.MeterPlaceholder} />
+                )}
               </form.AppField>
 
               <form.AppField name="overheadWithoutFlooring">
-                {(field) => <field.TextInputField label={SharedTexts.OverheadWithoutFlooring} placeholder={CrmTexts.Customers.Form.MeterPlaceholder} />}
+                {(field) => (
+                  <field.TextInputField label={SharedTexts.OverheadWithoutFlooring} placeholder={CrmTexts.Customers.Form.MeterPlaceholder} />
+                )}
               </form.AppField>
 
               <form.AppField name="travelLength">
                 {(field) => <field.TextInputField label={SharedTexts.TravelLength} placeholder={CrmTexts.Customers.Form.MeterPlaceholder} />}
               </form.AppField>
-            </SimpleGrid>
+            </div>
 
             <form.AppField name="shaftSurroundingCoveringTypes">
               {(field) => (
@@ -321,11 +363,11 @@ export function CustomerFormPage({ customer, onCancel, onSubmit }: CustomerFormP
                 />
               )}
             </form.AppField>
-          </Stack>
+          </div>
         </FormSection>
 
         <FormSection title={CrmTexts.Customers.Form.CrmTrackingSection} description={CrmTexts.Customers.Form.CrmTrackingDescription}>
-          <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing="md">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <form.AppField name="source">
               {(field) => <field.TextInputField label={CrmTexts.Customers.Table.Source} placeholder={CrmTexts.Customers.Form.SourcePlaceholder} />}
             </form.AppField>
@@ -343,37 +385,48 @@ export function CustomerFormPage({ customer, onCancel, onSubmit }: CustomerFormP
             </form.AppField>
 
             <form.AppField name="status">
-              {(field) => <field.SelectField label={CrmTexts.Customers.Form.StatusLabel} data={statusOptions} comboboxProps={{ withinPortal: true }} />}
+              {(field) => (
+                <field.SelectField label={CrmTexts.Customers.Form.StatusLabel} data={statusOptions} comboboxProps={{ withinPortal: true }} />
+              )}
             </form.AppField>
 
             <form.AppField name="priority">
-              {(field) => <field.SelectField label={CrmTexts.Customers.Form.PriorityLabel} data={priorityOptions} comboboxProps={{ withinPortal: true }} />}
+              {(field) => (
+                <field.SelectField label={CrmTexts.Customers.Form.PriorityLabel} data={priorityOptions} comboboxProps={{ withinPortal: true }} />
+              )}
             </form.AppField>
 
-            <form.AppField name="lastContact">
-              {(field) => <field.DatePickerField label={CrmTexts.Customers.Table.LastContact} />}
-            </form.AppField>
+            <form.AppField name="lastContact">{(field) => <field.DatePickerField label={CrmTexts.Customers.Table.LastContact} />}</form.AppField>
 
             <form.AppField name="nextStep">
-              {(field) => <field.TextInputField label={CrmTexts.Customers.Table.NextStep} placeholder={CrmTexts.Customers.Form.NextStepPlaceholder} />}
+              {(field) => (
+                <field.TextInputField label={CrmTexts.Customers.Table.NextStep} placeholder={CrmTexts.Customers.Form.NextStepPlaceholder} />
+              )}
             </form.AppField>
 
             <form.AppField name="estimatedValue">
-              {(field) => <field.TextInputField label={CrmTexts.Customers.Table.EstimatedValue} placeholder={CrmTexts.Customers.Form.EstimatedValuePlaceholder} />}
+              {(field) => (
+                <field.TextInputField
+                  label={CrmTexts.Customers.Table.EstimatedValue}
+                  placeholder={CrmTexts.Customers.Form.EstimatedValuePlaceholder}
+                />
+              )}
             </form.AppField>
-          </SimpleGrid>
+          </div>
 
           <form.AppField name="description">
-            {(field) => <field.TextareaField label={SharedTexts.Description} placeholder={CrmTexts.Customers.Form.DescriptionPlaceholder} minRows={4} />}
+            {(field) => (
+              <field.TextareaField label={SharedTexts.Description} placeholder={CrmTexts.Customers.Form.DescriptionPlaceholder} minRows={4} />
+            )}
           </form.AppField>
         </FormSection>
 
-        <Group justify="flex-end" gap="sm">
+        <div className="flex justify-end gap-2">
           <Button type="button" variant="default" onClick={onCancel}>
             {CrmTexts.Customers.Form.CancelButton}
           </Button>
           <form.SubmitButton>{isEditMode ? CrmTexts.Customers.Form.UpdateButton : CrmTexts.Customers.Form.SaveButton}</form.SubmitButton>
-        </Group>
+        </div>
       </form>
     </form.AppForm>
   );

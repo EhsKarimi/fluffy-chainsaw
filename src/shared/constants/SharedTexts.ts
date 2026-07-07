@@ -5,8 +5,8 @@ export const SharedTexts = {
   FormTitle: "فرم اطلاعات مشتری",
   FormEnglishTitle: "Customer Information Form",
   DocumentCode: "AT SLS 00000 FRM 001 00",
-  LastFormUpdateDate: "تاریخ آخرین بروزرسانی فرم: ۱۴۰۳/۰۶/۱۸",
-  PageNumber: "صفحه ۱ از ۱",
+  LastFormUpdateDate: "تاریخ آخرین بروزرسانی فرم: 1403/06/18",
+  PageNumber: "صفحه 1 از 1",
   VisitDate: {
     Label: "تاریخ بازدید",
     Day: "روز",
@@ -102,6 +102,8 @@ export const SharedTexts = {
     All: "همه",
     From: "از",
     To: "تا",
+    Yes: "بله",
+    No: "خیر",
   },
   Errors: {
     RequiredField: "این فیلد الزامی است.",
@@ -113,6 +115,11 @@ export const SharedTexts = {
     NoFileSelected: "فایلی انتخاب نشده است.",
     WorksheetNotFound: "کاربرگ (worksheet) یافت نشد.",
     UnknownError: "خطایی برای این مورد پیش آمده است.",
+  },
+  Table: {
+    Actions: "عملیات",
+    EmptyState: "موردی برای نمایش وجود ندارد.",
+    Loading: "در حال دریافت اطلاعات...",
   },
   Pagination: {
     PageSizeLabel: "تعداد در صفحه",
@@ -179,7 +186,46 @@ export const SharedTexts = {
     },
   },
   Profile: {
+    PageDescription: "تنظیمات حساب کاربری، شخصی‌سازی محیط و اطلاعات دسترسی کاربر.",
     PermissionCountLabel: "مجوز",
+    Tabs: {
+      Personalization: "شخصی‌سازی",
+      Account: "حساب کاربری",
+    },
+    Personalization: {
+      Title: "شخصی‌سازی محیط کاربری",
+      Description: "این تنظیمات فعلاً در مرورگر ذخیره می‌شوند و ساختار سرویس برای اتصال بعدی به API آماده است.",
+      Syncing: "در حال بررسی تنظیمات ذخیره‌شده در سرور...",
+      FontSize: "اندازه فونت",
+      Density: "فشردگی رابط کاربری",
+      DefaultTablePageSize: "تعداد پیش‌فرض ردیف جدول",
+      ReduceMotion: "کاهش انیمیشن‌ها",
+      SaveButton: "ذخیره تنظیمات",
+      ResetButton: "بازگشت به پیش‌فرض",
+      FontSizeOptions: {
+        Compact: "کوچک",
+        Normal: "معمولی",
+        Large: "بزرگ",
+        ExtraLarge: "خیلی بزرگ",
+      },
+      DensityOptions: {
+        Compact: "فشرده",
+        Normal: "معمولی",
+        Comfortable: "راحت",
+      },
+      Summary: {
+        Title: "پیش‌نمایش تنظیمات فعال",
+        FontSize: "فونت",
+        Density: "چیدمان",
+        DefaultRows: "ردیف جدول",
+        Motion: "انیمیشن",
+        MotionReduced: "کاهش‌یافته",
+        MotionNormal: "معمولی",
+      },
+    },
+    Account: {
+      Description: "اطلاعات حساب کاربری فعال در جریان mock auth.",
+    },
   },
   Layout: {
     HeaderTitle: "پنل مدیریت آتیس",

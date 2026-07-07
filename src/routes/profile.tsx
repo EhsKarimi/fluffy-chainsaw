@@ -1,9 +1,11 @@
-import { Avatar, Card, Group, Stack, Text, Title } from "@mantine/core";
+import { Avatar, Tabs } from "@mantine/core";
+import { IconSettings, IconUserCircle } from "@tabler/icons-react";
 import { createFileRoute } from "@tanstack/react-router";
 
 import { RequirePermission } from "@/modules/auth/components/RequirePermission";
 import { useAuth } from "@/modules/auth/context/useAuth";
 import { PermissionKeys } from "@/modules/auth/types/auth.types";
+import { ProfilePersonalizationTab } from "@/modules/profile/components/ProfilePersonalizationTab";
 import { AppBadge } from "@/shared/components/ui/AppBadge";
 import { SharedTexts } from "@/shared/constants/SharedTexts";
 
@@ -36,33 +38,51 @@ function ProfilePage() {
   }
 
   return (
-    <Stack gap="lg" dir="rtl">
+    <div className="space-y-6" dir="rtl">
       <div>
-        <Title order={1}>{SharedTexts.Navigation.Profile}</Title>
-        <Text c="dimmed" mt={6}>
-          اطلاعات حساب کاربری فعال در جریان mock auth.
-        </Text>
+        <h1 className="text-2xl font-extrabold text-slate-900">{SharedTexts.Navigation.Profile}</h1>
+        <p className="mt-1.5 text-sm text-slate-500">{SharedTexts.Profile.PageDescription}</p>
       </div>
 
-      <Card radius="xl" padding="xl" shadow="sm" className="border border-slate-200 bg-white">
-        <Group align="flex-start" gap="lg">
-          <Avatar color={user.avatarColor} radius="xl" size={72}>
-            {getInitials(user.fullName)}
-          </Avatar>
-          <Stack gap="xs">
-            <Title order={3}>{user.fullName}</Title>
-            <Text c="dimmed" dir="ltr">
-              {user.email}
-            </Text>
-            <Group gap="xs">
-              <AppBadge tone={user.avatarColor === "blue" || user.avatarColor === "teal" ? user.avatarColor : "atisCyan"}>
-                {user.roleLabel}
-              </AppBadge>
-              <AppBadge tone="gray" variant="outline">{user.permissions.length} {SharedTexts.Profile.PermissionCountLabel}</AppBadge>
-            </Group>
-          </Stack>
-        </Group>
-      </Card>
-    </Stack>
+      <Tabs defaultValue="personalization" variant="pills" radius="xl" keepMounted={false}>
+        <Tabs.List grow>
+          <Tabs.Tab value="personalization" rightSection={<IconSettings size={18} />}>
+            {SharedTexts.Profile.Tabs.Personalization}
+          </Tabs.Tab>
+          <Tabs.Tab value="account" rightSection={<IconUserCircle size={18} />}>
+            {SharedTexts.Profile.Tabs.Account}
+          </Tabs.Tab>
+        </Tabs.List>
+
+        <Tabs.Panel value="personalization" pt="lg">
+          <ProfilePersonalizationTab />
+        </Tabs.Panel>
+
+        <Tabs.Panel value="account" pt="lg">
+          <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm md:p-8">
+            <div className="flex items-start gap-6">
+              <Avatar color={user.avatarColor} radius="xl" size={72}>
+                {getInitials(user.fullName)}
+              </Avatar>
+              <div className="space-y-2">
+                <h3 className="text-lg font-extrabold text-slate-900">{user.fullName}</h3>
+                <p className="text-sm text-slate-500" dir="ltr">
+                  {user.email}
+                </p>
+                <p className="text-sm text-slate-500">{SharedTexts.Profile.Account.Description}</p>
+                <div className="flex flex-wrap gap-2">
+                  <AppBadge tone={user.avatarColor === "blue" || user.avatarColor === "teal" ? user.avatarColor : "atisCyan"}>
+                    {user.roleLabel}
+                  </AppBadge>
+                  <AppBadge tone="gray" variant="outline">
+                    {user.permissions.length} {SharedTexts.Profile.PermissionCountLabel}
+                  </AppBadge>
+                </div>
+              </div>
+            </div>
+          </section>
+        </Tabs.Panel>
+      </Tabs>
+    </div>
   );
 }

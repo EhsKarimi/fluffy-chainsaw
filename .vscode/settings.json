@@ -1,3 +1,13 @@
 {
-  "cSpell.words": ["atis"]
+  "cSpell.words": ["atis"],
+  "editor.quickSuggestions": {
+    "strings": "on"
+  },
+  "editor.wordBasedSuggestions": "off",
+  "tailwindCSS.classAttributes": ["class", "className", "headerClassName", "cellClassName", "rowClassName"],
+  "tailwindCSS.experimental.classRegex": [
+    ["(?:headerClassName|cellClassName|rowClassName)\\s*:\\s*\"([^\"]*)\"", "([^\"]*)"],
+    ["(?:headerClassName|cellClassName|rowClassName)\\s*:\\s*'([^']*)'", "([^']*)"],
+    ["(?:headerClassName|cellClassName|rowClassName)\\s*:\\s*`([^`]*)`", "([^`]*)"]
+  ]
 }

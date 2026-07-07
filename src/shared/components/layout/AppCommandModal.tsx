@@ -1,10 +1,10 @@
-import { Modal, Select, Stack, Text } from "@mantine/core";
+import { Modal, Select } from "@mantine/core";
 import { useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 
 import { useAuth } from "@/modules/auth/context/useAuth";
-import { appCommands, type AppCommandId } from "@/shared/constants/app-commands";
 import { SharedTexts } from "@/shared/constants/SharedTexts";
+import { type AppCommandId, appCommands } from "@/shared/constants/app-commands";
 
 type AppCommandModalProps = {
   opened: boolean;
@@ -43,7 +43,7 @@ export function AppCommandModal({ onClose, opened }: AppCommandModalProps) {
         await navigate({ to: "/crm/customers", search: {} });
         return;
       case "customer-create":
-        await navigate({ to: "/crm/customers", search: { action: "new" } });
+        await navigate({ to: "/crm/customers/new", search: {} });
         return;
       case "project-list":
         await navigate({ to: "/crm/projects" });
@@ -65,7 +65,7 @@ export function AppCommandModal({ onClose, opened }: AppCommandModalProps) {
 
   return (
     <Modal opened={opened} onClose={handleClose} title={SharedTexts.CommandPalette.ModalTitle} radius="xl" size="lg" centered dir="rtl">
-      <Stack gap="sm">
+      <div className="space-y-2">
         <Select
           data={commandOptions}
           value={value}
@@ -84,10 +84,8 @@ export function AppCommandModal({ onClose, opened }: AppCommandModalProps) {
           placeholder={SharedTexts.CommandPalette.SearchPlaceholder}
           comboboxProps={{ withinPortal: true, zIndex: 10000 }}
         />
-        <Text size="xs" c="dimmed">
-          {SharedTexts.CommandPalette.CodeHint}
-        </Text>
-      </Stack>
+        <p className="text-xs text-slate-500">{SharedTexts.CommandPalette.CodeHint}</p>
+      </div>
     </Modal>
   );
 }

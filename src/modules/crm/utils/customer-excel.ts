@@ -1,10 +1,10 @@
 import { CrmTexts } from "@/modules/crm/constants/CrmTexts";
 import { type CustomerRecord } from "@/modules/crm/types/customer.types";
 import { SharedTexts } from "@/shared/constants/SharedTexts";
-import { exportExcel, type ExportColumn, type ExportRow } from "@/shared/utils/excel/excel";
+import { type ExportColumn, type ExportRow } from "@/shared/utils/excel/excel";
 import { getCountyName, getProvinceName } from "@/shared/utils/iran-location";
 
-const customerExcelColumns: ExportColumn[] = [
+export const customerExcelColumns: ExportColumn[] = [
   { header: CrmTexts.Customers.Table.Code, key: "id", width: 12 },
   { header: SharedTexts.EmployerName, key: "employerName", width: 28 },
   { header: SharedTexts.RequesterName, key: "requesterName", width: 24 },
@@ -66,8 +66,10 @@ function mapCustomerToExcelRow(customer: CustomerRecord): ExportRow {
   };
 }
 
-export function exportCustomersToExcel(customers: readonly CustomerRecord[]) {
-  const fileName = `${CrmTexts.Customers.Excel.FileName}-${createSafeDateSuffix()}`;
+export function createCustomerExcelName() {
+  return `${CrmTexts.Customers.Excel.FileName}-${createSafeDateSuffix()}`;
+}
 
-  return exportExcel(fileName, customerExcelColumns, customers.map(mapCustomerToExcelRow));
+export function createCustomerExcelRows(customers: readonly CustomerRecord[]): ExportRow[] {
+  return customers.map(mapCustomerToExcelRow);
 }

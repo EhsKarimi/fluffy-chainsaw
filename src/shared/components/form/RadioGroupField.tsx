@@ -1,4 +1,4 @@
-import { Group, Radio, type MantineSpacing, type RadioGroupProps, type RadioProps } from "@mantine/core";
+import { Radio, type RadioGroupProps, type RadioProps } from "@mantine/core";
 import { type ReactNode } from "react";
 
 import { getFirstFieldError } from "@/shared/components/form/fieldError";
@@ -13,11 +13,10 @@ type RadioGroupOption = {
 type RadioGroupFieldProps = Omit<RadioGroupProps, "children" | "defaultValue" | "name" | "value"> & {
   data: RadioGroupOption[];
   groupClassName?: string;
-  groupGap?: MantineSpacing;
   radioSize?: RadioProps["size"];
 };
 
-export function RadioGroupField({ data, error, groupClassName, groupGap = "md", id, onChange, radioSize = "sm", ...radioGroupProps }: RadioGroupFieldProps) {
+export function RadioGroupField({ data, error, groupClassName, id, onChange, radioSize = "sm", ...radioGroupProps }: RadioGroupFieldProps) {
   const field = useFieldContext<string>();
   const fieldError = getFirstFieldError(field.state.meta.errors);
 
@@ -34,11 +33,11 @@ export function RadioGroupField({ data, error, groupClassName, groupGap = "md", 
         onChange?.(value);
       }}
     >
-      <Group gap={groupGap} className={groupClassName} mt={radioGroupProps.label ? "xs" : 0}>
+      <div className={groupClassName ?? "mt-2 flex flex-wrap gap-4"}>
         {data.map((option) => (
           <Radio key={option.value} value={option.value} label={option.label} disabled={option.disabled} size={radioSize} />
         ))}
-      </Group>
+      </div>
     </Radio.Group>
   );
 }

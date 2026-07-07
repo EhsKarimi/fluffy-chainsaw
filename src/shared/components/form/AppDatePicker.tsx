@@ -1,9 +1,8 @@
-import { Text } from "@mantine/core";
+import { type ComponentType, type ReactNode } from "react";
 import { type Calendar, type Locale } from "react-date-object";
 import persian from "react-date-object/calendars/persian.js";
 import persianFa from "react-date-object/locales/persian_fa.js";
 import DatePickerModule, { type CalendarProps, type DateObject, type DatePickerProps, type Value } from "react-multi-date-picker";
-import { type ComponentType, type ReactNode } from "react";
 
 import { SharedTexts } from "@/shared/constants/SharedTexts";
 import { cn } from "@/shared/utils/style";
@@ -59,16 +58,12 @@ export function AppDatePicker({
   return (
     <div className={cn("space-y-1.5", rootClassName)} data-atis-field-error={error ? "true" : undefined} dir="rtl">
       {label ? (
-        <Text component="label" size="sm" fw={600} className="block text-slate-700">
+        <label className="block text-sm font-semibold text-slate-700">
           {label}
           {required ? <span className="me-1 text-red-600">*</span> : null}
-        </Text>
+        </label>
       ) : null}
-      {description ? (
-        <Text size="xs" c="dimmed">
-          {description}
-        </Text>
-      ) : null}
+      {description ? <p className="text-xs text-slate-500">{description}</p> : null}
       <DatePicker
         {...datePickerProps}
         calendar={calendar}
@@ -87,11 +82,7 @@ export function AppDatePicker({
         required={required}
         value={value}
       />
-      {error ? (
-        <Text size="xs" className="text-red-600">
-          {error}
-        </Text>
-      ) : null}
+      {error ? <p className="text-xs text-red-600">{error}</p> : null}
     </div>
   );
 }

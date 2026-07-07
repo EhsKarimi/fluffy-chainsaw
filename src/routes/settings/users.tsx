@@ -1,8 +1,8 @@
-import { Card, Stack, Table, Text, Title } from "@mantine/core";
 import { createFileRoute } from "@tanstack/react-router";
 
 import { RequirePermission } from "@/modules/auth/components/RequirePermission";
 import { PermissionKeys } from "@/modules/auth/types/auth.types";
+import { AppTable, createAppTableColumns } from "@/shared/components/table";
 import { AppBadge } from "@/shared/components/ui/AppBadge";
 import { SharedTexts } from "@/shared/constants/SharedTexts";
 
@@ -16,12 +16,12 @@ const mockUsers = [
     name: "مدیر سیستم آتیس",
     username: "admin@atis.local",
     email: "admin@atis.local",
-    phone: "۰۹۱۲۱۲۳۴۵۶۷",
+    phone: "09121234567",
     department: "مدیریت فناوری اطلاعات",
     role: "مدیر سیستم",
     accessLevel: "دسترسی کامل",
-    lastLogin: "۱۴۰۳/۰۷/۱۲ ۱۰:۳۰",
-    createdAt: "۱۴۰۳/۰۶/۰۱",
+    lastLogin: "1403/07/12 10:30",
+    createdAt: "1403/06/01",
     status: "فعال",
   },
   {
@@ -29,12 +29,12 @@ const mockUsers = [
     name: "کارشناس فروش آتیس",
     username: "sales@atis.local",
     email: "sales@atis.local",
-    phone: "۰۹۱۲۲۳۴۵۶۷۸",
+    phone: "09122345678",
     department: "فروش و CRM",
     role: "کارشناس فروش",
     accessLevel: "CRM و پروژه‌ها",
-    lastLogin: "۱۴۰۳/۰۷/۱۲ ۰۹:۱۵",
-    createdAt: "۱۴۰۳/۰۶/۰۵",
+    lastLogin: "1403/07/12 09:15",
+    createdAt: "1403/06/05",
     status: "فعال",
   },
   {
@@ -42,14 +42,36 @@ const mockUsers = [
     name: "مدیر فروش",
     username: "sales-manager@atis.local",
     email: "sales-manager@atis.local",
-    phone: "۰۹۱۲۳۴۵۶۷۸۹",
+    phone: "09123456789",
     department: "فروش و CRM",
     role: "مدیر فروش",
     accessLevel: "تایید فروش و گزارش‌ها",
-    lastLogin: "۱۴۰۳/۰۷/۱۰ ۱۶:۴۵",
-    createdAt: "۱۴۰۳/۰۶/۱۰",
+    lastLogin: "1403/07/10 16:45",
+    createdAt: "1403/06/10",
     status: "نمونه",
   },
+];
+
+type UserRow = (typeof mockUsers)[number];
+
+const userColumn = createAppTableColumns<UserRow>();
+
+const userColumns = [
+  userColumn.field("id", { title: "کد", width: 90, sortable: true }),
+  userColumn.field("name", { title: "نام کاربر", width: 220, sortable: true, render: (value) => <strong>{value}</strong> }),
+  userColumn.field("username", { title: "نام کاربری", width: 180, cellClassName: "text-left", sortable: true }),
+  userColumn.field("email", { title: SharedTexts.Email, width: 180, cellClassName: "text-left" }),
+  userColumn.field("phone", { title: SharedTexts.ContactNumber, width: 150 }),
+  userColumn.field("department", { title: "دپارتمان", width: 190 }),
+  userColumn.field("role", { title: "نقش", width: 150 }),
+  userColumn.field("accessLevel", { title: "سطح دسترسی", width: 190 }),
+  userColumn.field("lastLogin", { title: "آخرین ورود", width: 170 }),
+  userColumn.field("createdAt", { title: "تاریخ ایجاد", width: 140 }),
+  userColumn.field("status", {
+    title: "وضعیت",
+    width: 120,
+    render: (value) => <AppBadge tone={value === "فعال" ? "atisCyan" : "gray"}>{value}</AppBadge>,
+  }),
 ];
 
 function UsersRoute() {
@@ -62,54 +84,17 @@ function UsersRoute() {
 
 function UsersPage() {
   return (
-    <Stack gap="lg" dir="rtl">
+    <div className="space-y-6" dir="rtl">
       <div>
-        <Title order={1}>{SharedTexts.Navigation.Users}</Title>
-        <Text c="dimmed" mt={6}>
+        <h1 className="text-2xl font-extrabold text-slate-900">{SharedTexts.Navigation.Users}</h1>
+        <p className="mt-1.5 text-sm text-slate-500">
           مدیریت کاربران بعداً به API سازمان متصل می‌شود؛ این جدول ستون‌های کلیدی برای نسخه اولیه پنل را نشان می‌دهد.
-        </Text>
+        </p>
       </div>
 
-      <Card radius="xl" padding="lg" shadow="sm" className="border border-slate-200 bg-white">
-        <Table.ScrollContainer minWidth={1180}>
-          <Table verticalSpacing="md" horizontalSpacing="md" highlightOnHover>
-            <Table.Thead>
-              <Table.Tr>
-                <Table.Th className="whitespace-nowrap">کد</Table.Th>
-                <Table.Th className="whitespace-nowrap">نام کاربر</Table.Th>
-                <Table.Th className="whitespace-nowrap">نام کاربری</Table.Th>
-                <Table.Th className="whitespace-nowrap">{SharedTexts.Email}</Table.Th>
-                <Table.Th className="whitespace-nowrap">{SharedTexts.ContactNumber}</Table.Th>
-                <Table.Th className="whitespace-nowrap">دپارتمان</Table.Th>
-                <Table.Th className="whitespace-nowrap">نقش</Table.Th>
-                <Table.Th className="whitespace-nowrap">سطح دسترسی</Table.Th>
-                <Table.Th className="whitespace-nowrap">آخرین ورود</Table.Th>
-                <Table.Th className="whitespace-nowrap">تاریخ ایجاد</Table.Th>
-                <Table.Th className="whitespace-nowrap">وضعیت</Table.Th>
-              </Table.Tr>
-            </Table.Thead>
-            <Table.Tbody>
-              {mockUsers.map((user) => (
-                <Table.Tr key={user.id}>
-                  <Table.Td>{user.id}</Table.Td>
-                  <Table.Td fw={700}>{user.name}</Table.Td>
-                  <Table.Td dir="ltr">{user.username}</Table.Td>
-                  <Table.Td dir="ltr">{user.email}</Table.Td>
-                  <Table.Td>{user.phone}</Table.Td>
-                  <Table.Td>{user.department}</Table.Td>
-                  <Table.Td>{user.role}</Table.Td>
-                  <Table.Td>{user.accessLevel}</Table.Td>
-                  <Table.Td>{user.lastLogin}</Table.Td>
-                  <Table.Td>{user.createdAt}</Table.Td>
-                  <Table.Td>
-                    <AppBadge tone={user.status === "فعال" ? "atisCyan" : "gray"}>{user.status}</AppBadge>
-                  </Table.Td>
-                </Table.Tr>
-              ))}
-            </Table.Tbody>
-          </Table>
-        </Table.ScrollContainer>
-      </Card>
-    </Stack>
+      <section className="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm md:p-6">
+        <AppTable columns={userColumns} dataSource={mockUsers} minWidth={1180} rowKey="id" />
+      </section>
+    </div>
   );
 }

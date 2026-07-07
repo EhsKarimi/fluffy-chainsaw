@@ -7,23 +7,11 @@ type PageTitleLocation = {
   search: PageTitleSearch;
 };
 
-function getCustomerPageTitle(search: PageTitleSearch) {
-  if (search.action === "new") {
-    return SharedTexts.PageTitles.AddCustomer;
-  }
-
-  if (search.action === "edit") {
-    return SharedTexts.PageTitles.EditCustomer;
-  }
-
-  return SharedTexts.PageTitles.Customers;
-}
-
 export function formatPageTitle(currentPageTitle: string) {
   return SharedTexts.PageTitle.Template.replace("{currentPageTitle}", currentPageTitle);
 }
 
-export function getPageTitle({ pathname, search }: PageTitleLocation) {
+export function getPageTitle({ pathname }: PageTitleLocation) {
   if (pathname === "/login") {
     return SharedTexts.PageTitles.Login;
   }
@@ -33,7 +21,15 @@ export function getPageTitle({ pathname, search }: PageTitleLocation) {
   }
 
   if (pathname === "/crm/customers") {
-    return getCustomerPageTitle(search);
+    return SharedTexts.PageTitles.Customers;
+  }
+
+  if (pathname === "/crm/customers/new") {
+    return SharedTexts.PageTitles.AddCustomer;
+  }
+
+  if (/^\/crm\/customers\/[^/]+\/edit$/.test(pathname)) {
+    return SharedTexts.PageTitles.EditCustomer;
   }
 
   if (pathname === "/crm/projects") {

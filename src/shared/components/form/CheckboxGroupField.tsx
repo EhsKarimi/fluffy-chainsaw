@@ -1,4 +1,4 @@
-import { Checkbox, Group, type CheckboxGroupProps, type CheckboxProps, type MantineSpacing } from "@mantine/core";
+import { Checkbox, type CheckboxGroupProps, type CheckboxProps } from "@mantine/core";
 import { type ReactNode } from "react";
 
 import { getFirstFieldError } from "@/shared/components/form/fieldError";
@@ -14,7 +14,6 @@ type CheckboxGroupFieldProps = Omit<CheckboxGroupProps, "children" | "defaultVal
   checkboxSize?: CheckboxProps["size"];
   data: CheckboxGroupOption[];
   groupClassName?: string;
-  groupGap?: MantineSpacing;
 };
 
 export function CheckboxGroupField({
@@ -22,7 +21,6 @@ export function CheckboxGroupField({
   data,
   error,
   groupClassName,
-  groupGap = "md",
   id,
   onChange,
   ...checkboxGroupProps
@@ -42,11 +40,11 @@ export function CheckboxGroupField({
         onChange?.(value);
       }}
     >
-      <Group gap={groupGap} className={groupClassName} mt={checkboxGroupProps.label ? "xs" : 0}>
+      <div className={groupClassName ?? "mt-2 flex flex-wrap gap-4"}>
         {data.map((option) => (
           <Checkbox key={option.value} value={option.value} label={option.label} disabled={option.disabled} size={checkboxSize} />
         ))}
-      </Group>
+      </div>
     </Checkbox.Group>
   );
 }

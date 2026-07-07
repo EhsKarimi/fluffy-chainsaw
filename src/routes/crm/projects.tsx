@@ -1,11 +1,12 @@
-import { Button, Card, Group, Stack, Table, Text, Title } from "@mantine/core";
+import { Button } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
 import { createFileRoute } from "@tanstack/react-router";
 
 import { RequirePermission } from "@/modules/auth/components/RequirePermission";
-import { CrmTexts } from "@/modules/crm/constants/CrmTexts";
 import { useAuth } from "@/modules/auth/context/useAuth";
 import { PermissionKeys } from "@/modules/auth/types/auth.types";
+import { CrmTexts } from "@/modules/crm/constants/CrmTexts";
+import { AppTable, createAppTableColumns } from "@/shared/components/table";
 import { AppBadge } from "@/shared/components/ui/AppBadge";
 import { SharedTexts } from "@/shared/constants/SharedTexts";
 
@@ -20,15 +21,15 @@ const mockProjects = [
     customer: "شرکت عمران سپهر",
     type: "گیرلس بدون موتورخانه ام‌آر‌ال",
     usage: "مسافربر",
-    units: "۲ دستگاه",
-    stops: "۱۲ توقف",
-    speed: "۱.۶ متر بر ثانیه",
-    capacity: "۱۰ نفره",
+    units: "2 دستگاه",
+    stops: "12 توقف",
+    speed: "1.6 متر بر ثانیه",
+    capacity: "10 نفره",
     phase: "پیشنهاد فنی",
     salesExpert: "کارشناس فروش آتیس",
-    visitDate: "۱۴۰۳/۰۷/۱۸",
-    deadline: "۱۴۰۳/۰۸/۰۵",
-    estimatedBudget: "۴.۸ میلیارد تومان",
+    visitDate: "1403/07/18",
+    deadline: "1403/08/05",
+    estimatedBudget: "4.8 میلیارد تومان",
   },
   {
     id: "P-2102",
@@ -36,15 +37,15 @@ const mockProjects = [
     customer: "بیمارستان آتیه",
     type: "گیرلس با موتورخانه ام‌آر",
     usage: "بیمارستانی تخت‌بر",
-    units: "۱ دستگاه",
-    stops: "۸ توقف",
-    speed: "۱ متر بر ثانیه",
-    capacity: "۱۶۰۰ کیلوگرم",
+    units: "1 دستگاه",
+    stops: "8 توقف",
+    speed: "1 متر بر ثانیه",
+    capacity: "1600 کیلوگرم",
     phase: "بازدید انجام شد",
     salesExpert: "مدیر فروش",
-    visitDate: "۱۴۰۳/۰۷/۱۵",
-    deadline: "۱۴۰۳/۰۷/۳۰",
-    estimatedBudget: "۳.۹ میلیارد تومان",
+    visitDate: "1403/07/15",
+    deadline: "1403/07/30",
+    estimatedBudget: "3.9 میلیارد تومان",
   },
   {
     id: "P-2103",
@@ -52,16 +53,37 @@ const mockProjects = [
     customer: "مجتمع تجاری نگین",
     type: "هیدرولیک",
     usage: "خودروبر",
-    units: "۱ دستگاه",
-    stops: "۵ توقف",
-    speed: "۰.۶۳ متر بر ثانیه",
-    capacity: "۳۰۰۰ کیلوگرم",
+    units: "1 دستگاه",
+    stops: "5 توقف",
+    speed: "0.63 متر بر ثانیه",
+    capacity: "3000 کیلوگرم",
     phase: "در انتظار تایید قیمت",
     salesExpert: "کارشناس فروش آتیس",
-    visitDate: "۱۴۰۳/۰۷/۰۹",
-    deadline: "۱۴۰۳/۰۸/۰۲",
-    estimatedBudget: "۲.۷ میلیارد تومان",
+    visitDate: "1403/07/09",
+    deadline: "1403/08/02",
+    estimatedBudget: "2.7 میلیارد تومان",
   },
+];
+
+type ProjectRow = (typeof mockProjects)[number];
+
+const projectColumn = createAppTableColumns<ProjectRow>();
+
+const projectColumns = [
+  projectColumn.field("id", { title: CrmTexts.Projects.Table.ProjectCode, width: 110, sortable: true }),
+  projectColumn.field("name", { title: SharedTexts.ProjectName, width: 190, sortable: true, render: (value) => <strong>{value}</strong> }),
+  projectColumn.field("customer", { title: SharedTexts.EmployerName, width: 190 }),
+  projectColumn.field("type", { title: SharedTexts.ElevatorType.Label, width: 230 }),
+  projectColumn.field("usage", { title: SharedTexts.UsageType.Label, width: 150 }),
+  projectColumn.field("units", { title: SharedTexts.NumberOfUnits, width: 130 }),
+  projectColumn.field("stops", { title: SharedTexts.NumberOfStops, width: 130, render: (value) => <AppBadge>{value}</AppBadge> }),
+  projectColumn.field("speed", { title: SharedTexts.ElevatorSpeed, width: 150 }),
+  projectColumn.field("capacity", { title: SharedTexts.Capacity, width: 150 }),
+  projectColumn.field("phase", { title: CrmTexts.Projects.Table.CurrentPhase, width: 180, render: (value) => <AppBadge>{value}</AppBadge> }),
+  projectColumn.field("salesExpert", { title: CrmTexts.Projects.Table.SalesExpert, width: 160 }),
+  projectColumn.field("visitDate", { title: SharedTexts.VisitDate.Label, width: 140 }),
+  projectColumn.field("deadline", { title: CrmTexts.Projects.Table.NextDeadline, width: 140 }),
+  projectColumn.field("estimatedBudget", { title: CrmTexts.Projects.Table.EstimatedBudget, width: 180 }),
 ];
 
 function ProjectsRoute() {
@@ -77,65 +99,18 @@ function ProjectsPage() {
   const canCreateProject = hasPermission(PermissionKeys.CrmProjectsCreate);
 
   return (
-    <Stack gap="lg" dir="rtl">
-      <Group justify="space-between" align="flex-start">
+    <div className="space-y-6" dir="rtl">
+      <div className="flex flex-col justify-between gap-4 md:flex-row md:items-start">
         <div>
-          <Title order={1}>{SharedTexts.Navigation.Projects}</Title>
-          <Text c="dimmed" mt={6}>
-            {CrmTexts.Projects.PageDescription}
-          </Text>
+          <h1 className="text-2xl font-extrabold text-slate-900">{SharedTexts.Navigation.Projects}</h1>
+          <p className="mt-1.5 text-sm text-slate-500">{CrmTexts.Projects.PageDescription}</p>
         </div>
         {canCreateProject ? <Button leftSection={<IconPlus size={18} />}>{CrmTexts.Projects.NewProjectButton}</Button> : null}
-      </Group>
+      </div>
 
-      <Card radius="xl" padding="lg" shadow="sm" className="border border-slate-200 bg-white">
-        <Table.ScrollContainer minWidth={1320}>
-          <Table verticalSpacing="md" horizontalSpacing="md" highlightOnHover>
-            <Table.Thead>
-              <Table.Tr>
-                <Table.Th className="whitespace-nowrap">{CrmTexts.Projects.Table.ProjectCode}</Table.Th>
-                <Table.Th className="whitespace-nowrap">{SharedTexts.ProjectName}</Table.Th>
-                <Table.Th className="whitespace-nowrap">{SharedTexts.EmployerName}</Table.Th>
-                <Table.Th className="whitespace-nowrap">{SharedTexts.ElevatorType.Label}</Table.Th>
-                <Table.Th className="whitespace-nowrap">{SharedTexts.UsageType.Label}</Table.Th>
-                <Table.Th className="whitespace-nowrap">{SharedTexts.NumberOfUnits}</Table.Th>
-                <Table.Th className="whitespace-nowrap">{SharedTexts.NumberOfStops}</Table.Th>
-                <Table.Th className="whitespace-nowrap">{SharedTexts.ElevatorSpeed}</Table.Th>
-                <Table.Th className="whitespace-nowrap">{SharedTexts.Capacity}</Table.Th>
-                <Table.Th className="whitespace-nowrap">{CrmTexts.Projects.Table.CurrentPhase}</Table.Th>
-                <Table.Th className="whitespace-nowrap">{CrmTexts.Projects.Table.SalesExpert}</Table.Th>
-                <Table.Th className="whitespace-nowrap">{SharedTexts.VisitDate.Label}</Table.Th>
-                <Table.Th className="whitespace-nowrap">{CrmTexts.Projects.Table.NextDeadline}</Table.Th>
-                <Table.Th className="whitespace-nowrap">{CrmTexts.Projects.Table.EstimatedBudget}</Table.Th>
-              </Table.Tr>
-            </Table.Thead>
-            <Table.Tbody>
-              {mockProjects.map((project) => (
-                <Table.Tr key={project.id}>
-                  <Table.Td>{project.id}</Table.Td>
-                  <Table.Td fw={700}>{project.name}</Table.Td>
-                  <Table.Td>{project.customer}</Table.Td>
-                  <Table.Td>{project.type}</Table.Td>
-                  <Table.Td>{project.usage}</Table.Td>
-                  <Table.Td>{project.units}</Table.Td>
-                  <Table.Td>
-                    <AppBadge>{project.stops}</AppBadge>
-                  </Table.Td>
-                  <Table.Td>{project.speed}</Table.Td>
-                  <Table.Td>{project.capacity}</Table.Td>
-                  <Table.Td>
-                    <AppBadge>{project.phase}</AppBadge>
-                  </Table.Td>
-                  <Table.Td>{project.salesExpert}</Table.Td>
-                  <Table.Td>{project.visitDate}</Table.Td>
-                  <Table.Td>{project.deadline}</Table.Td>
-                  <Table.Td>{project.estimatedBudget}</Table.Td>
-                </Table.Tr>
-              ))}
-            </Table.Tbody>
-          </Table>
-        </Table.ScrollContainer>
-      </Card>
-    </Stack>
+      <section className="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm md:p-6">
+        <AppTable columns={projectColumns} dataSource={mockProjects} minWidth={1320} rowKey="id" />
+      </section>
+    </div>
   );
 }

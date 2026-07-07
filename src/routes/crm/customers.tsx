@@ -1,38 +1,28 @@
-import { ActionIcon, Button, Card, Group, Stack, Table, Text, Title, Tooltip } from "@mantine/core";
-import { IconArrowRight, IconEdit, IconFileSpreadsheet, IconPlus, IconTrash } from "@tabler/icons-react";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
+import { Button } from "@mantine/core";
+import { IconEdit, IconFileSpreadsheet, IconPlus, IconTrash } from "@tabler/icons-react";
+import { Link, Outlet, createFileRoute, useLocation } from "@tanstack/react-router";
+import { useMemo, useState } from "react";
 
 import { RequirePermission } from "@/modules/auth/components/RequirePermission";
 import { useAuth } from "@/modules/auth/context/useAuth";
 import { PermissionKeys } from "@/modules/auth/types/auth.types";
-import { CustomerFormPage } from "@/modules/crm/components/CustomerFormPage";
 import { CustomerListFilters } from "@/modules/crm/components/CustomerListFilters";
 import { CrmTexts } from "@/modules/crm/constants/CrmTexts";
-import { type CustomerListFilterValues } from "@/modules/crm/types/customer-filter.types";
+import { useMockCustomerListQuery } from "@/modules/crm/hooks/useMockCustomerListQuery";
+import { useStoredCustomers } from "@/modules/crm/hooks/useStoredCustomers";
 import { type CustomerPriority, type CustomerRecord } from "@/modules/crm/types/customer.types";
-import { exportCustomersToExcel } from "@/modules/crm/utils/customer-excel";
-import { countActiveCustomerFilters, defaultCustomerListFilterValues, filterCustomers } from "@/modules/crm/utils/customer-filtering";
-import { getNextCustomerId, loadCustomersFromStorage, saveCustomersToStorage } from "@/modules/crm/utils/customer-storage";
+import { createCustomerExcelName, createCustomerExcelRows, customerExcelColumns } from "@/modules/crm/utils/customer-excel";
+import { countActiveCustomerFilters } from "@/modules/crm/utils/customer-filtering";
+import { customerListRouteConfig, validateCustomerSearch } from "@/modules/crm/utils/customer-list-search";
+import { usePersonalization } from "@/modules/profile/context/usePersonalization";
+import { AppTablePage, AppTablePageSection } from "@/shared/components/list-page";
+import { AppTable, type AppTableRowActions, createAppTableColumns } from "@/shared/components/table";
 import { AppBadge } from "@/shared/components/ui/AppBadge";
-import { AppPagination } from "@/shared/components/ui/AppPagination";
 import { DeleteConfirmationModal } from "@/shared/components/ui/DeleteConfirmationModal";
 import { SharedTexts } from "@/shared/constants/SharedTexts";
+import { useAppExcelExport } from "@/shared/export";
+import { useAppListPageBounds, useAppListRouteController } from "@/shared/list-state";
 import { getCountyName, getProvinceName } from "@/shared/utils/iran-location";
-
-type CustomerRouteSearch = {
-  action?: "new" | "edit";
-  customerId?: string;
-};
-
-const DEFAULT_PAGE_SIZE = 10;
-
-function validateCustomerSearch(search: Record<string, unknown>): CustomerRouteSearch {
-  const action = search.action === "new" || search.action === "edit" ? search.action : undefined;
-  const customerId = typeof search.customerId === "string" ? search.customerId : undefined;
-
-  return { action, customerId };
-}
 
 export const Route = createFileRoute("/crm/customers")({
   validateSearch: validateCustomerSearch,
@@ -40,9 +30,11 @@ export const Route = createFileRoute("/crm/customers")({
 });
 
 function CustomersRoute() {
+  const pathname = useLocation({ select: (location) => location.pathname });
+
   return (
     <RequirePermission permission={PermissionKeys.CrmCustomersView}>
-      <CustomersPage />
+      {pathname === "/crm/customers" ? <CustomersPage /> : <Outlet />}
     </RequirePermission>
   );
 }
@@ -60,68 +52,36 @@ function getPriorityTone(priority: CustomerPriority) {
 }
 
 function CustomersPage() {
-  const navigate = useNavigate();
   const search = Route.useSearch();
+  const { settings } = usePersonalization();
   const { hasPermission } = useAuth();
   const canCreateCustomer = hasPermission(PermissionKeys.CrmCustomersCreate);
-  const [customers, setCustomers] = useState<CustomerRecord[]>(() => loadCustomersFromStorage());
+  const [customers, setCustomers] = useStoredCustomers();
   const [deletingCustomer, setDeletingCustomer] = useState<CustomerRecord | null>(null);
-  const [filters, setFilters] = useState<CustomerListFilterValues>(defaultCustomerListFilterValues);
-  const [isExportingCustomers, setIsExportingCustomers] = useState(false);
-  const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
 
-  useEffect(() => {
-    saveCustomersToStorage(customers);
-  }, [customers]);
+  const listRoute = useAppListRouteController({
+    config: customerListRouteConfig,
+    defaultPageSize: settings.defaultTablePageSize,
+    search,
+    to: "/crm/customers",
+  });
+  const { filters, page, pageSize } = listRoute;
+  const customersResult = useMockCustomerListQuery({
+    customers,
+    filters,
+    page,
+    pageSize,
+    sorting: listRoute.sorting,
+  });
+
+  useAppListPageBounds({
+    onReplacePage: listRoute.replacePage,
+    page,
+    pageSize,
+    totalItems: customersResult.totalItems,
+  });
 
   const activeFilterCount = useMemo(() => countActiveCustomerFilters(filters), [filters]);
-  const filteredCustomers = useMemo(() => filterCustomers(customers, filters), [customers, filters]);
-  const sortedCustomers = useMemo(
-    () => [...filteredCustomers].sort((firstCustomer, secondCustomer) => secondCustomer.id - firstCustomer.id),
-    [filteredCustomers],
-  );
-  const totalPages = Math.max(1, Math.ceil(sortedCustomers.length / pageSize));
-  const paginatedCustomers = useMemo(() => {
-    const startIndex = (page - 1) * pageSize;
-
-    return sortedCustomers.slice(startIndex, startIndex + pageSize);
-  }, [page, pageSize, sortedCustomers]);
-
-  useEffect(() => {
-    if (page > totalPages) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setPage(totalPages);
-    }
-  }, [page, totalPages]);
-
-  const editingCustomerId = search.action === "edit" ? Number(search.customerId) : undefined;
-  const editingCustomer = Number.isFinite(editingCustomerId) ? customers.find((customer) => customer.id === editingCustomerId) : undefined;
-  const isFormPage = search.action === "new" || search.action === "edit";
-
-  const navigateToCustomerList = async () => {
-    await navigate({ to: "/crm/customers", search: {} });
-  };
-
-  const navigateToNewCustomer = async () => {
-    await navigate({ to: "/crm/customers", search: { action: "new" } });
-  };
-
-  const navigateToEditCustomer = async (customer: CustomerRecord) => {
-    await navigate({ to: "/crm/customers", search: { action: "edit", customerId: String(customer.id) } });
-  };
-
-  const handleSubmitCustomer = async (values: Omit<CustomerRecord, "id">) => {
-    if (search.action === "edit" && editingCustomer) {
-      setCustomers((currentCustomers) =>
-        currentCustomers.map((customer) => (customer.id === editingCustomer.id ? { ...values, id: editingCustomer.id } : customer)),
-      );
-    } else {
-      setCustomers((currentCustomers) => [{ ...values, id: getNextCustomerId(currentCustomers) }, ...currentCustomers]);
-    }
-
-    await navigateToCustomerList();
-  };
 
   const handleConfirmDelete = () => {
     if (!deletingCustomer) {
@@ -132,201 +92,129 @@ function CustomersPage() {
     setDeletingCustomer(null);
   };
 
-  const handleApplyFilters = (nextFilters: CustomerListFilterValues) => {
-    setFilters(nextFilters);
-    setPage(1);
-  };
+  const customerExcelExport = useAppExcelExport({
+    columns: customerExcelColumns,
+    excelName: createCustomerExcelName,
+    getRows: () => createCustomerExcelRows(customersResult.exportRows),
+  });
 
-  const handlePageSizeChange = (nextPageSize: number) => {
-    setPageSize(nextPageSize);
-    setPage(1);
-  };
+  const customerColumns = useMemo(() => {
+    const column = createAppTableColumns<CustomerRecord>();
 
-  const handleExportCustomers = async () => {
-    setIsExportingCustomers(true);
+    return [
+      column.field("id", { title: CrmTexts.Customers.Table.Code, sortable: true, width: 92 }),
+      column.field("employerName", {
+        title: SharedTexts.EmployerName,
+        sortable: true,
+        width: 220,
+        render: (value) => <strong className="font-extrabold text-slate-900">{value}</strong>,
+      }),
+      column.field("requesterName", { title: SharedTexts.RequesterName, sortable: true, width: 180 }),
+      column.field("contactNumber", { title: SharedTexts.ContactNumber, width: 160 }),
+      column.field("provinceId", {
+        title: SharedTexts.Province,
+        sortable: true,
+        width: 150,
+        render: (value) => getProvinceName(value),
+      }),
+      column.field("countyId", {
+        title: SharedTexts.County,
+        sortable: true,
+        width: 150,
+        render: (value) => getCountyName(value),
+      }),
+      column.field("projectName", { title: SharedTexts.ProjectName, sortable: true, width: 220, ellipsis: true }),
+      column.field("source", { title: CrmTexts.Customers.Table.Source, width: 160 }),
+      column.field("salesExpert", { title: CrmTexts.Customers.Table.SalesExpert, sortable: true, width: 160 }),
+      column.field("priority", {
+        title: CrmTexts.Customers.Table.Priority,
+        sortable: true,
+        width: 130,
+        render: (value) => <AppBadge tone={getPriorityTone(value)}>{CrmTexts.Customers.PriorityLabels[value]}</AppBadge>,
+      }),
+      column.field("lastContact", { title: CrmTexts.Customers.Table.LastContact, sortable: true, width: 150 }),
+      column.field("nextStep", { title: CrmTexts.Customers.Table.NextStep, width: 220, ellipsis: true }),
+      column.field("estimatedValue", { title: CrmTexts.Customers.Table.EstimatedValue, width: 170 }),
+      column.field("status", {
+        title: CrmTexts.Customers.Table.Status,
+        sortable: true,
+        width: 160,
+        render: (value) => <AppBadge>{CrmTexts.Customers.StatusLabels[value]}</AppBadge>,
+      }),
+    ];
+  }, []);
 
-    try {
-      await exportCustomersToExcel(sortedCustomers);
-    } finally {
-      setIsExportingCustomers(false);
-    }
-  };
-
-  if (isFormPage) {
-    if (search.action === "edit" && !editingCustomer) {
-      return (
-        <Stack gap="lg" dir="rtl">
-          <Group justify="space-between" align="flex-start">
-            <div>
-              <Title order={1}>{CrmTexts.Customers.EditCustomerTitle}</Title>
-              <Text c="dimmed" mt={6}>
-                {CrmTexts.Customers.Form.CustomerNotFoundDescription}
-              </Text>
-            </div>
-            <Button variant="default" leftSection={<IconArrowRight size={18} />} onClick={() => void navigateToCustomerList()}>
-              {CrmTexts.Customers.Form.BackToListButton}
-            </Button>
-          </Group>
-          <Card radius="xl" padding="xl" shadow="sm" className="border border-slate-200 bg-white text-center text-slate-500">
-            {CrmTexts.Customers.Form.CustomerNotFoundTitle}
-          </Card>
-        </Stack>
-      );
-    }
-
-    return (
-      <Stack gap="lg" dir="rtl">
-        <Group justify="space-between" align="flex-start">
-          <div>
-            <Title order={1}>{search.action === "edit" ? CrmTexts.Customers.EditCustomerTitle : CrmTexts.Customers.AddCustomerTitle}</Title>
-            <Text c="dimmed" mt={6}>
-              {CrmTexts.Customers.Form.FormPageDescription}
-            </Text>
-          </div>
-          <Button variant="default" leftSection={<IconArrowRight size={18} />} onClick={() => void navigateToCustomerList()}>
-            {CrmTexts.Customers.Form.BackToListButton}
-          </Button>
-        </Group>
-
-        <CustomerFormPage
-          customer={search.action === "edit" ? editingCustomer : null}
-          onCancel={() => void navigateToCustomerList()}
-          onSubmit={handleSubmitCustomer}
-        />
-      </Stack>
-    );
-  }
+  const customerRowActions = useMemo<AppTableRowActions<CustomerRecord>>(
+    () => ({
+      title: CrmTexts.Customers.Table.Actions,
+      width: 120,
+      items: [
+        {
+          key: "edit",
+          label: CrmTexts.Customers.Table.EditAction,
+          ariaLabel: CrmTexts.Customers.Table.EditAction,
+          icon: <IconEdit size={18} />,
+          to: "/crm/customers/$customerId/edit",
+          params: (customer) => ({ customerId: String(customer.id) }),
+        },
+        {
+          key: "delete",
+          label: CrmTexts.Customers.Table.DeleteAction,
+          ariaLabel: CrmTexts.Customers.Table.DeleteAction,
+          color: "red",
+          icon: <IconTrash size={18} />,
+          onClick: (customer) => setDeletingCustomer(customer),
+        },
+      ],
+    }),
+    [],
+  );
 
   return (
-    <Stack gap="lg" dir="rtl">
-      <Group justify="space-between" align="flex-start">
-        <div>
-          <Title order={1}>{SharedTexts.Navigation.Customers}</Title>
-          <Text c="dimmed" mt={6}>
-            {CrmTexts.Customers.PageDescription}
-          </Text>
-        </div>
-        <Group gap="sm">
+    <AppTablePage
+      title={SharedTexts.Navigation.Customers}
+      description={CrmTexts.Customers.PageDescription}
+      actions={
+        <>
           <Button
             variant="light"
             leftSection={<IconFileSpreadsheet size={18} />}
-            loading={isExportingCustomers}
-            onClick={() => void handleExportCustomers()}
+            loading={customerExcelExport.isExporting}
+            onClick={() => void customerExcelExport.exportRows()}
           >
             {CrmTexts.Customers.Excel.ReceiveButton}
           </Button>
           {canCreateCustomer ? (
-            <Button leftSection={<IconPlus size={18} />} onClick={() => void navigateToNewCustomer()}>
+            <Button component={Link} to="/crm/customers/new" leftSection={<IconPlus size={18} />}>
               {CrmTexts.Customers.NewCustomerButton}
             </Button>
           ) : null}
-        </Group>
-      </Group>
-
-      <CustomerListFilters customers={customers} filters={filters} activeFilterCount={activeFilterCount} onApply={handleApplyFilters} />
-
-      <Card radius="xl" padding="lg" shadow="sm" className="border border-slate-200 bg-white">
-        <Stack gap="md">
-          <Table.ScrollContainer minWidth={1480}>
-            <Table verticalSpacing="md" horizontalSpacing="md" highlightOnHover>
-              <Table.Thead>
-                <Table.Tr>
-                  <Table.Th className="whitespace-nowrap">{CrmTexts.Customers.Table.Code}</Table.Th>
-                  <Table.Th className="whitespace-nowrap">{SharedTexts.EmployerName}</Table.Th>
-                  <Table.Th className="whitespace-nowrap">{SharedTexts.RequesterName}</Table.Th>
-                  <Table.Th className="whitespace-nowrap">{SharedTexts.ContactNumber}</Table.Th>
-                  <Table.Th className="whitespace-nowrap">{SharedTexts.Province}</Table.Th>
-                  <Table.Th className="whitespace-nowrap">{SharedTexts.County}</Table.Th>
-                  <Table.Th className="whitespace-nowrap">{SharedTexts.ProjectName}</Table.Th>
-                  <Table.Th className="whitespace-nowrap">{CrmTexts.Customers.Table.Source}</Table.Th>
-                  <Table.Th className="whitespace-nowrap">{CrmTexts.Customers.Table.SalesExpert}</Table.Th>
-                  <Table.Th className="whitespace-nowrap">{CrmTexts.Customers.Table.Priority}</Table.Th>
-                  <Table.Th className="whitespace-nowrap">{CrmTexts.Customers.Table.LastContact}</Table.Th>
-                  <Table.Th className="whitespace-nowrap">{CrmTexts.Customers.Table.NextStep}</Table.Th>
-                  <Table.Th className="whitespace-nowrap">{CrmTexts.Customers.Table.EstimatedValue}</Table.Th>
-                  <Table.Th className="whitespace-nowrap">{CrmTexts.Customers.Table.Status}</Table.Th>
-                  <Table.Th className="text-center whitespace-nowrap">{CrmTexts.Customers.Table.Actions}</Table.Th>
-                </Table.Tr>
-              </Table.Thead>
-              <Table.Tbody>
-                {paginatedCustomers.length > 0 ? (
-                  paginatedCustomers.map((customer) => (
-                    <Table.Tr key={customer.id}>
-                      <Table.Td>{customer.id}</Table.Td>
-                      <Table.Td fw={700}>{customer.employerName}</Table.Td>
-                      <Table.Td>{customer.requesterName}</Table.Td>
-                      <Table.Td>{customer.contactNumber}</Table.Td>
-                      <Table.Td>{getProvinceName(customer.provinceId)}</Table.Td>
-                      <Table.Td>{getCountyName(customer.countyId)}</Table.Td>
-                      <Table.Td>{customer.projectName}</Table.Td>
-                      <Table.Td>{customer.source}</Table.Td>
-                      <Table.Td>{customer.salesExpert}</Table.Td>
-                      <Table.Td>
-                        <AppBadge tone={getPriorityTone(customer.priority)}>{CrmTexts.Customers.PriorityLabels[customer.priority]}</AppBadge>
-                      </Table.Td>
-                      <Table.Td>{customer.lastContact}</Table.Td>
-                      <Table.Td>{customer.nextStep}</Table.Td>
-                      <Table.Td>{customer.estimatedValue}</Table.Td>
-                      <Table.Td>
-                        <AppBadge>{CrmTexts.Customers.StatusLabels[customer.status]}</AppBadge>
-                      </Table.Td>
-                      <Table.Td>
-                        <Group justify="center" gap="xs" wrap="nowrap">
-                          <Tooltip label={CrmTexts.Customers.Table.EditAction}>
-                            <ActionIcon
-                              variant="subtle"
-                              color="atisCyan"
-                              radius="xl"
-                              aria-label={CrmTexts.Customers.Table.EditAction}
-                              onClick={() => void navigateToEditCustomer(customer)}
-                            >
-                              <IconEdit size={18} />
-                            </ActionIcon>
-                          </Tooltip>
-                          <Tooltip label={CrmTexts.Customers.Table.DeleteAction}>
-                            <ActionIcon
-                              variant="subtle"
-                              color="red"
-                              radius="xl"
-                              aria-label={CrmTexts.Customers.Table.DeleteAction}
-                              onClick={() => setDeletingCustomer(customer)}
-                            >
-                              <IconTrash size={18} />
-                            </ActionIcon>
-                          </Tooltip>
-                        </Group>
-                      </Table.Td>
-                    </Table.Tr>
-                  ))
-                ) : (
-                  <Table.Tr>
-                    <Table.Td colSpan={15} className="py-10 text-center text-slate-500">
-                      {activeFilterCount > 0 ? CrmTexts.Customers.Table.FilteredEmptyState : CrmTexts.Customers.Table.EmptyState}
-                    </Table.Td>
-                  </Table.Tr>
-                )}
-              </Table.Tbody>
-            </Table>
-          </Table.ScrollContainer>
-
-          <AppPagination
-            page={page}
-            pageSize={pageSize}
-            totalItems={sortedCustomers.length}
-            onPageChange={setPage}
-            onPageSizeChange={handlePageSizeChange}
-          />
-        </Stack>
-      </Card>
-
-      <DeleteConfirmationModal
-        opened={Boolean(deletingCustomer)}
-        entityType={CrmTexts.Customers.Delete.EntityType}
-        entityName={deletingCustomer?.employerName ?? ""}
-        description={CrmTexts.Customers.Delete.Description}
-        onClose={() => setDeletingCustomer(null)}
-        onConfirm={handleConfirmDelete}
-      />
-    </Stack>
+        </>
+      }
+      filters={<CustomerListFilters customers={customers} filters={filters} activeFilterCount={activeFilterCount} onApply={listRoute.applyFilters} />}
+      modals={
+        <DeleteConfirmationModal
+          opened={Boolean(deletingCustomer)}
+          entityType={CrmTexts.Customers.Delete.EntityType}
+          entityName={deletingCustomer?.employerName ?? ""}
+          description={CrmTexts.Customers.Delete.Description}
+          onClose={() => setDeletingCustomer(null)}
+          onConfirm={handleConfirmDelete}
+        />
+      }
+    >
+      <AppTablePageSection>
+        <AppTable
+          columns={customerColumns}
+          dataSource={customersResult.rows}
+          emptyText={activeFilterCount > 0 ? CrmTexts.Customers.Table.FilteredEmptyState : CrmTexts.Customers.Table.EmptyState}
+          minWidth={1480}
+          pagination={listRoute.createPagination(customersResult.totalItems)}
+          sorting={listRoute.tableSorting}
+          rowActions={customerRowActions}
+          rowKey="id"
+        />
+      </AppTablePageSection>
+    </AppTablePage>
   );
 }

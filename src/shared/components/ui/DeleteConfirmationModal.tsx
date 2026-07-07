@@ -1,4 +1,4 @@
-import { Button, Group, Modal, Stack, Text } from "@mantine/core";
+import { Button, Modal } from "@mantine/core";
 import { IconAlertTriangle } from "@tabler/icons-react";
 
 import { SharedTexts } from "@/shared/constants/SharedTexts";
@@ -28,30 +28,26 @@ export function DeleteConfirmationModal({
 }: DeleteConfirmationModalProps) {
   return (
     <Modal opened={opened} onClose={onClose} title={SharedTexts.DeleteConfirmation.Title} centered radius="xl" dir="rtl">
-      <Stack gap="lg">
-        <Group gap="sm" align="flex-start" wrap="nowrap">
+      <div className="space-y-6">
+        <div className="flex items-start gap-3">
           <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-red-50 text-red-600 ring-1 ring-red-100">
             <IconAlertTriangle size={24} />
           </div>
           <div>
-            <Text fw={800} className="text-slate-900">
-              {buildDeleteMessage(entityType, entityName)}
-            </Text>
-            <Text size="sm" c="dimmed" mt={6} className="leading-7">
-              {description}
-            </Text>
+            <p className="font-extrabold text-slate-900">{buildDeleteMessage(entityType, entityName)}</p>
+            <p className="mt-1.5 text-sm leading-7 text-slate-500">{description}</p>
           </div>
-        </Group>
+        </div>
 
-        <Group justify="flex-end" gap="sm">
+        <div className="flex justify-end gap-2">
           <Button variant="default" onClick={onClose} disabled={loading}>
             {SharedTexts.Common.Cancel}
           </Button>
           <Button color="red" onClick={onConfirm} loading={loading}>
             {SharedTexts.Common.ConfirmDelete}
           </Button>
-        </Group>
-      </Stack>
+        </div>
+      </div>
     </Modal>
   );
 }

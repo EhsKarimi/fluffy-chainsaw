@@ -8,7 +8,9 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "prepare": "husky"
+    "prepare": "husky",
+    "zip:ai": "node scripts/zip-for-ai.mjs",
+    "check-update-interactive": "ncu --interactive --format group"
   },
   "dependencies": {
     "@mantine/core": "^9.4.1",
@@ -17,8 +19,9 @@
     "@mantine/notifications": "^9.4.1",
     "@tabler/icons-react": "^3.44.0",
     "@tanstack/react-form": "^1.33.0",
-    "@tanstack/react-router": "^1.170.16",
+    "@tanstack/react-router": "^1.170.17",
     "@tanstack/react-router-devtools": "^1.167.0",
+    "@tanstack/react-table": "^8.21.3",
     "axios": "^1.18.1",
     "clsx": "^2.1.1",
     "exceljs": "^4.4.0",
@@ -35,7 +38,7 @@
     "@eslint/js": "^10.0.1",
     "@rolldown/plugin-babel": "^0.2.3",
     "@tailwindcss/vite": "^4.3.2",
-    "@tanstack/router-plugin": "^1.168.18",
+    "@tanstack/router-plugin": "^1.168.19",
     "@trivago/prettier-plugin-sort-imports": "^6.0.2",
     "@types/babel__core": "^7.20.5",
     "@types/lodash-es": "^4.17.12",
@@ -54,8 +57,8 @@
     "prettier": "^3.9.4",
     "prettier-plugin-tailwindcss": "^0.8.0",
     "tailwindcss": "^4.3.2",
-    "typescript": "~6.0.2",
-    "typescript-eslint": "^8.62.0",
-    "vite": "^8.1.1"
+    "typescript": "~6.0.3",
+    "typescript-eslint": "^8.62.1",
+    "vite": "^8.1.3"
   }
 }

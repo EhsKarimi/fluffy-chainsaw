@@ -1,4 +1,4 @@
-import { Alert, Button, Stack, Text, Title } from "@mantine/core";
+import { Alert, Button } from "@mantine/core";
 import { IconLockAccess } from "@tabler/icons-react";
 import { Link } from "@tanstack/react-router";
 import { type PropsWithChildren } from "react";
@@ -19,17 +19,15 @@ export function RequirePermission({ children, permission }: RequirePermissionPro
   }
 
   return (
-    <div className="mx-auto flex min-h-permission-page max-w-xl items-center justify-center p-4" dir="rtl">
+    <div className="min-h-permission-page mx-auto flex max-w-xl items-center justify-center p-4" dir="rtl">
       <Alert color="red" icon={<IconLockAccess size={22} />} radius="lg" className="w-full shadow-sm">
-        <Stack gap="sm">
-          <Title order={3}>{AuthTexts.Auth.AccessDeniedTitle}</Title>
-          <Text size="sm" c="dimmed">
-            {AuthTexts.Auth.AccessDeniedDescription}
-          </Text>
+        <div className="space-y-2">
+          <h3 className="text-lg font-extrabold text-slate-900">{AuthTexts.Auth.AccessDeniedTitle}</h3>
+          <p className="text-sm text-slate-500">{AuthTexts.Auth.AccessDeniedDescription}</p>
           <Button component={Link} to="/dashboard" variant="light" className="self-start">
             {AuthTexts.Auth.BackToDashboard}
           </Button>
-        </Stack>
+        </div>
       </Alert>
     </div>
   );

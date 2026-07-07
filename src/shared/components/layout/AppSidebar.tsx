@@ -1,4 +1,4 @@
-import { Collapse, ScrollArea, Text, TextInput, ThemeIcon, UnstyledButton } from "@mantine/core";
+import { Collapse, ScrollArea, TextInput, ThemeIcon, UnstyledButton } from "@mantine/core";
 import { IconChevronLeft, IconSearch } from "@tabler/icons-react";
 import { Link, useLocation } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
@@ -89,7 +89,10 @@ export function AppSidebar({ onNavigate }: AppSidebarProps) {
   const { hasPermission, user } = useAuth();
   const pathname = useLocation({ select: (location) => location.pathname });
   const [searchValue, setSearchValue] = useState("");
-  const allowedNavigationItems = useMemo(() => navigationItems.filter((item) => itemIsAllowed(item, hasPermission, user?.role)), [hasPermission, user?.role]);
+  const allowedNavigationItems = useMemo(
+    () => navigationItems.filter((item) => itemIsAllowed(item, hasPermission, user?.role)),
+    [hasPermission, user?.role],
+  );
   const normalizedSearchValue = normalizeSearchValue(searchValue);
   const visibleNavigationItems = useMemo(
     () => filterNavigationItems(allowedNavigationItems, normalizedSearchValue),
@@ -131,7 +134,9 @@ export function AppSidebar({ onNavigate }: AppSidebarProps) {
 
           <Collapse expanded={isOpen} transitionDuration={220} transitionTimingFunction="ease">
             <div className="mr-2 space-y-1 border-r border-slate-200">
-              {item.children?.filter((child) => itemIsAllowed(child, hasPermission, user?.role)).map((child) => renderNavigationItem(child, depth + 1))}
+              {item.children
+                ?.filter((child) => itemIsAllowed(child, hasPermission, user?.role))
+                .map((child) => renderNavigationItem(child, depth + 1))}
             </div>
           </Collapse>
         </div>
@@ -194,9 +199,7 @@ export function AppSidebar({ onNavigate }: AppSidebarProps) {
         {visibleNavigationItems.length > 0 ? (
           <nav className="space-y-1.5">{visibleNavigationItems.map((item) => renderNavigationItem(item))}</nav>
         ) : (
-          <Text size="xs" c="dimmed" className="px-3 py-4 text-center">
-            {SharedTexts.Layout.SidebarNoResults}
-          </Text>
+          <p className="px-3 py-4 text-center text-xs text-slate-500">{SharedTexts.Layout.SidebarNoResults}</p>
         )}
       </ScrollArea>
     </aside>

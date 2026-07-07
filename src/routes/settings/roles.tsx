@@ -1,8 +1,8 @@
-import { Card, Group, Stack, Table, Text, Title } from "@mantine/core";
 import { createFileRoute } from "@tanstack/react-router";
 
 import { RequirePermission } from "@/modules/auth/components/RequirePermission";
 import { PermissionKeys } from "@/modules/auth/types/auth.types";
+import { AppTable, createAppTableColumns } from "@/shared/components/table";
 import { AppBadge } from "@/shared/components/ui/AppBadge";
 import { SharedTexts } from "@/shared/constants/SharedTexts";
 
@@ -16,9 +16,9 @@ const mockRoles = [
     title: "مدیر سیستم",
     department: "فناوری اطلاعات",
     scope: "کل سامانه",
-    usersCount: "۱ کاربر",
-    createdAt: "۱۴۰۳/۰۶/۰۱",
-    updatedAt: "۱۴۰۳/۰۷/۰۱",
+    usersCount: "1 کاربر",
+    createdAt: "1403/06/01",
+    updatedAt: "1403/07/01",
     status: "فعال",
     permissions: ["همه بخش‌ها", "مدیریت کاربران", "گزارش‌ها"],
   },
@@ -27,9 +27,9 @@ const mockRoles = [
     title: "کارشناس فروش",
     department: "فروش و CRM",
     scope: "CRM و پروژه‌ها",
-    usersCount: "۱ کاربر",
-    createdAt: "۱۴۰۳/۰۶/۰۵",
-    updatedAt: "۱۴۰۳/۰۷/۰۳",
+    usersCount: "1 کاربر",
+    createdAt: "1403/06/05",
+    updatedAt: "1403/07/03",
     status: "فعال",
     permissions: ["داشبورد", "مشتریان", "پروژه‌ها"],
   },
@@ -38,12 +38,42 @@ const mockRoles = [
     title: "مدیر فروش",
     department: "فروش و CRM",
     scope: "فروش، تاییدها و گزارش‌ها",
-    usersCount: "۰ کاربر",
-    createdAt: "۱۴۰۳/۰۶/۱۰",
-    updatedAt: "۱۴۰۳/۰۶/۲۸",
+    usersCount: "0 کاربر",
+    createdAt: "1403/06/10",
+    updatedAt: "1403/06/28",
     status: "نمونه",
     permissions: ["تایید فروش", "گزارش‌ها", "CRM"],
   },
+];
+
+type RoleRow = (typeof mockRoles)[number];
+
+const roleColumn = createAppTableColumns<RoleRow>();
+
+const roleColumns = [
+  roleColumn.field("id", { title: "کد نقش", width: 110, sortable: true }),
+  roleColumn.field("title", { title: "عنوان نقش", width: 180, sortable: true, render: (value) => <strong>{value}</strong> }),
+  roleColumn.field("department", { title: "دپارتمان", width: 170 }),
+  roleColumn.field("scope", { title: "دامنه دسترسی", width: 210 }),
+  roleColumn.field("usersCount", { title: "تعداد کاربران", width: 140 }),
+  roleColumn.field("permissions", {
+    title: "مجوزها",
+    width: 280,
+    render: (permissions) => (
+      <div className="flex flex-wrap gap-1.5">
+        {permissions.map((permission) => (
+          <AppBadge key={permission}>{permission}</AppBadge>
+        ))}
+      </div>
+    ),
+  }),
+  roleColumn.field("createdAt", { title: "تاریخ ایجاد", width: 140 }),
+  roleColumn.field("updatedAt", { title: "آخرین بروزرسانی", width: 160 }),
+  roleColumn.field("status", {
+    title: "وضعیت",
+    width: 120,
+    render: (value) => <AppBadge tone={value === "فعال" ? "atisCyan" : "gray"}>{value}</AppBadge>,
+  }),
 ];
 
 function RolesRoute() {
@@ -56,56 +86,15 @@ function RolesRoute() {
 
 function RolesPage() {
   return (
-    <Stack gap="lg" dir="rtl">
+    <div className="space-y-6" dir="rtl">
       <div>
-        <Title order={1}>{SharedTexts.Navigation.Roles}</Title>
-        <Text c="dimmed" mt={6}>
-          مدل اولیه نقش‌ها و مجوزهای احراز هویت آتیس همراه با ستون‌های سازمانی و سطح دسترسی.
-        </Text>
+        <h1 className="text-2xl font-extrabold text-slate-900">{SharedTexts.Navigation.Roles}</h1>
+        <p className="mt-1.5 text-sm text-slate-500">مدل اولیه نقش‌ها و مجوزهای احراز هویت آتیس همراه با ستون‌های سازمانی و سطح دسترسی.</p>
       </div>
 
-      <Card radius="xl" padding="lg" shadow="sm" className="border border-slate-200 bg-white">
-        <Table.ScrollContainer minWidth={1040}>
-          <Table verticalSpacing="md" horizontalSpacing="md" highlightOnHover>
-            <Table.Thead>
-              <Table.Tr>
-                <Table.Th className="whitespace-nowrap">کد نقش</Table.Th>
-                <Table.Th className="whitespace-nowrap">عنوان نقش</Table.Th>
-                <Table.Th className="whitespace-nowrap">دپارتمان</Table.Th>
-                <Table.Th className="whitespace-nowrap">دامنه دسترسی</Table.Th>
-                <Table.Th className="whitespace-nowrap">تعداد کاربران</Table.Th>
-                <Table.Th className="whitespace-nowrap">مجوزها</Table.Th>
-                <Table.Th className="whitespace-nowrap">تاریخ ایجاد</Table.Th>
-                <Table.Th className="whitespace-nowrap">آخرین بروزرسانی</Table.Th>
-                <Table.Th className="whitespace-nowrap">وضعیت</Table.Th>
-              </Table.Tr>
-            </Table.Thead>
-            <Table.Tbody>
-              {mockRoles.map((role) => (
-                <Table.Tr key={role.id}>
-                  <Table.Td>{role.id}</Table.Td>
-                  <Table.Td fw={700}>{role.title}</Table.Td>
-                  <Table.Td>{role.department}</Table.Td>
-                  <Table.Td>{role.scope}</Table.Td>
-                  <Table.Td>{role.usersCount}</Table.Td>
-                  <Table.Td>
-                    <Group gap="xs">
-                      {role.permissions.map((permission) => (
-                        <AppBadge key={permission}>{permission}</AppBadge>
-                      ))}
-                    </Group>
-                  </Table.Td>
-                  <Table.Td>{role.createdAt}</Table.Td>
-                  <Table.Td>{role.updatedAt}</Table.Td>
-                  <Table.Td>
-                    <AppBadge tone={role.status === "فعال" ? "atisCyan" : "gray"}>{role.status}</AppBadge>
-                  </Table.Td>
-                </Table.Tr>
-              ))}
-            </Table.Tbody>
-          </Table>
-        </Table.ScrollContainer>
-      </Card>
-    </Stack>
+      <section className="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm md:p-6">
+        <AppTable columns={roleColumns} dataSource={mockRoles} minWidth={1040} rowKey="id" />
+      </section>
+    </div>
   );
 }

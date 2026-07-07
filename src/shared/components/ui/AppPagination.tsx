@@ -1,4 +1,4 @@
-import { Group, Pagination, Select, Text } from "@mantine/core";
+import { Pagination, Select } from "@mantine/core";
 
 import { SharedTexts } from "@/shared/constants/SharedTexts";
 
@@ -60,12 +60,10 @@ export function AppPagination({
   const pageSizeSelectData = pageSizeOptions.map((option) => ({ value: String(option), label: String(option) }));
 
   return (
-    <Group justify="space-between" align="center" gap="md" className="border-t border-slate-200 pt-4">
-      <Text size="sm" c="dimmed">
-        {getSummaryText({ page, pageSize, totalItems })}
-      </Text>
+    <div className="flex flex-col justify-between gap-4 border-t border-slate-200 pt-4 md:flex-row md:items-center">
+      <p className="text-sm text-slate-500">{getSummaryText({ page, pageSize, totalItems })}</p>
 
-      <Group gap="sm" justify="flex-end">
+      <div className="flex flex-wrap justify-end gap-2">
         {onPageSizeChange ? (
           <div className="flex items-center gap-2">
             <span>{SharedTexts.Pagination.PageSizeLabel}</span>
@@ -98,7 +96,7 @@ export function AppPagination({
           getControlProps={(control) => ({ "aria-label": getPageControlAriaLabel(control) })}
           onChange={onPageChange}
         />
-      </Group>
-    </Group>
+      </div>
+    </div>
   );
 }
