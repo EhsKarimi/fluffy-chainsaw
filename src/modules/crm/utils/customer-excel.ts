@@ -1,7 +1,7 @@
 import { CrmTexts } from "@/modules/crm/constants/CrmTexts";
 import { type CustomerRecord } from "@/modules/crm/types/customer.types";
 import { SharedTexts } from "@/shared/constants/SharedTexts";
-import { type ExportColumn, type ExportRow } from "@/shared/utils/excel/excel";
+import { type ExportColumn, type ExportRow } from "@/shared/utils/excel/excelTypes";
 import { getCountyName, getProvinceName } from "@/shared/utils/iran-location";
 
 export const customerExcelColumns: ExportColumn[] = [

@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
 
 import { waitForNextPaint } from "@/shared/utils/browser/waitForNextPaint";
-import { type ExportColumn, type ExportExcelOptions, type ExportRow, exportExcel } from "@/shared/utils/excel/excel";
+import { type ExportColumn, type ExportExcelOptions, type ExportRow } from "@/shared/utils/excel/excelTypes";
 
 type Resolvable<TValue> = TValue | (() => TValue);
 
@@ -24,6 +24,9 @@ export function useAppExcelExport({ columns, excelName, getRows, options }: UseA
 
     try {
       await waitForNextPaint();
+
+      const { exportExcel } = await import("@/shared/utils/excel/excel");
+
       await exportExcel(resolveValue(excelName), columns, getRows(), options);
     } finally {
       setIsExporting(false);

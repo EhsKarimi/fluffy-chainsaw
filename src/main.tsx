@@ -5,6 +5,7 @@ import ReactDOM from "react-dom/client";
 import { AuthProvider } from "@/modules/auth/context/AuthContext";
 import { PersonalizationProvider } from "@/modules/profile/context/PersonalizationContext";
 import { routeTree } from "@/routeTree.gen";
+import { AppRoutePending } from "@/shared/components/layout/AppRoutePending";
 import { MantineProviders } from "@/shared/providers/MantineProviders";
 import { initializeAppStorage } from "@/shared/storage/initialize-app-storage";
 
@@ -14,7 +15,14 @@ initializeAppStorage();
 
 const routerBasePath = import.meta.env.BASE_URL === "/" ? "/" : import.meta.env.BASE_URL.replace(/\/$/, "");
 
-const router = createRouter({ routeTree, basepath: routerBasePath });
+const router = createRouter({
+  routeTree,
+  basepath: routerBasePath,
+  defaultPendingComponent: AppRoutePending,
+  defaultPendingMs: 0,
+  defaultPendingMinMs: 250,
+  defaultPreload: "intent",
+});
 
 declare module "@tanstack/react-router" {
   interface Register {
