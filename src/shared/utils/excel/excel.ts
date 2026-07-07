@@ -39,7 +39,12 @@ export type {
 
 const HEADER_ROW_NUMBER = 1;
 
-export function exportExcel(excelName: string, columns: readonly ExportColumn[], rows: readonly ExportRow[], options?: ExportExcelOptions): Promise<void> {
+export function exportExcel(
+  excelName: string,
+  columns: readonly ExportColumn[],
+  rows: readonly ExportRow[],
+  options?: ExportExcelOptions,
+): Promise<void> {
   return exportExcelInternal({ excelName, columns, rows, options }).catch((error: unknown) => {
     handleExcelError({ error });
   });
@@ -50,7 +55,11 @@ export function exportExcel(excelName: string, columns: readonly ExportColumn[],
  *
  * The returned Promise rejects with a string[] when an import or validation error occurs.
  */
-export function importExcel<T extends ImportedExcelRow = ImportedExcelRow>(file: File, columnsHeader: readonly string[], options?: ImportExcelOptions): Promise<T[]> {
+export function importExcel<T extends ImportedExcelRow = ImportedExcelRow>(
+  file: File,
+  columnsHeader: readonly string[],
+  options?: ImportExcelOptions,
+): Promise<T[]> {
   const maxFileSizeBytes = options?.maxFileSizeBytes ?? 4.9 * 1024 * 1024;
   const maxRows = options?.maxRows ?? 5000;
   const skipEmptyRows = options?.skipEmptyRows ?? true;

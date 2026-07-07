@@ -1,0 +1,39 @@
+# Dependencies
+node_modules
+
+# Build output
+dist
+build
+coverage
+
+# Generated files
+src/routeTree.gen.ts
+
+# Package manager / generated metadata
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Local/editor/system files
+.DS_Store
+Thumbs.db
+.vscode
+.idea
+
+# Temporary/cache folders
+.cache
+.temp
+.tmp
+.turbo

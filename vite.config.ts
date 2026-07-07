@@ -15,13 +15,9 @@ const normalizeBasePath = (basePath?: string) => {
     return "./";
   }
 
-  const basePathWithLeadingSlash = trimmedBasePath.startsWith("/")
-    ? trimmedBasePath
-    : `/${trimmedBasePath}`;
+  const basePathWithLeadingSlash = trimmedBasePath.startsWith("/") ? trimmedBasePath : `/${trimmedBasePath}`;
 
-  return basePathWithLeadingSlash.endsWith("/")
-    ? basePathWithLeadingSlash
-    : `${basePathWithLeadingSlash}/`;
+  return basePathWithLeadingSlash.endsWith("/") ? basePathWithLeadingSlash : `${basePathWithLeadingSlash}/`;
 };
 
 export default defineConfig({

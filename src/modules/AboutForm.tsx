@@ -1,9 +1,8 @@
-import { useAppForm } from "@/shared/components/form/form";
-import { requestScrollToFirstFormError } from "@/shared/components/form/scrollToFirstFormError";
-
 import { AboutIdentitySection } from "@/modules/AboutIdentitySection";
 import { AboutPreferencesSection } from "@/modules/AboutPreferencesSection";
 import { aboutFormOptions } from "@/modules/about-form-options";
+import { useAppForm } from "@/shared/components/form/form";
+import { requestScrollToFirstFormError } from "@/shared/components/form/scrollToFirstFormError";
 
 export function AboutForm() {
   const form = useAppForm({

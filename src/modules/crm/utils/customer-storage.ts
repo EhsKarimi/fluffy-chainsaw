@@ -1,5 +1,5 @@
-import { defaultCustomers, emptyCustomerFormValues } from "@/modules/crm/constants/customer-defaults";
 import { CrmTexts } from "@/modules/crm/constants/CrmTexts";
+import { defaultCustomers, emptyCustomerFormValues } from "@/modules/crm/constants/customer-defaults";
 import { type CustomerPriority, type CustomerRecord, type CustomerStatus } from "@/modules/crm/types/customer.types";
 import { LocalStorageKeys } from "@/shared/constants/LocalStorageKeys";
 import { findCountyByName } from "@/shared/utils/iran-location";
@@ -49,7 +49,9 @@ function readSalesExpert(value: unknown, customerId: number) {
     return value;
   }
 
-  return CrmTexts.Customers.SalesExpertOptions[(customerId - 1) % CrmTexts.Customers.SalesExpertOptions.length] ?? emptyCustomerFormValues.salesExpert;
+  return (
+    CrmTexts.Customers.SalesExpertOptions[(customerId - 1) % CrmTexts.Customers.SalesExpertOptions.length] ?? emptyCustomerFormValues.salesExpert
+  );
 }
 
 function readLegacyLocation(candidate: Record<string, unknown>) {

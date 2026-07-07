@@ -1,6 +1,5 @@
-import { withForm } from "@/shared/components/form/form";
-
 import { aboutFormOptions } from "@/modules/about-form-options";
+import { withForm } from "@/shared/components/form/form";
 
 export const AboutIdentitySection = withForm({
   ...aboutFormOptions,

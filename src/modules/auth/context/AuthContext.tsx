@@ -1,10 +1,9 @@
 import { type PropsWithChildren, useCallback, useMemo, useState } from "react";
 
-import { LocalStorageKeys } from "@/shared/constants/LocalStorageKeys";
-
 import { AuthTexts } from "@/modules/auth/constants/AuthTexts";
 import { findMockUserByCredentials, findMockUserByToken } from "@/modules/auth/constants/mock-users";
 import { AuthContext, type AuthContextValue } from "@/modules/auth/context/auth-context-value";
+import { LocalStorageKeys } from "@/shared/constants/LocalStorageKeys";
 
 type AuthProviderProps = PropsWithChildren;
 

@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useState } from "react";
 
 import { waitForNextPaint } from "@/shared/utils/browser/waitForNextPaint";
 import { type ExportColumn, type ExportExcelOptions, type ExportRow, exportExcel } from "@/shared/utils/excel/excel";
@@ -16,23 +16,19 @@ export type UseAppExcelExportOptions = {
   options?: ExportExcelOptions;
 };
 
-export function useAppExcelExport(options: UseAppExcelExportOptions) {
+export function useAppExcelExport({ columns, excelName, getRows, options }: UseAppExcelExportOptions) {
   const [isExporting, setIsExporting] = useState(false);
-  const optionsRef = useRef(options);
-  optionsRef.current = options;
 
   const exportRows = useCallback(async () => {
-    const currentOptions = optionsRef.current;
-
     setIsExporting(true);
 
     try {
       await waitForNextPaint();
-      await exportExcel(resolveValue(currentOptions.excelName), currentOptions.columns, currentOptions.getRows(), currentOptions.options);
+      await exportExcel(resolveValue(excelName), columns, getRows(), options);
     } finally {
       setIsExporting(false);
     }
-  }, []);
+  }, [columns, excelName, getRows, options]);
 
   return {
     exportRows,

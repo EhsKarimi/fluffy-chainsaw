@@ -58,7 +58,7 @@ export function AppBadge({ children, className, size = "sm", tone = "atisCyan", 
   return (
     <span
       className={cn(
-        "inline-flex w-fit max-w-none shrink-0 items-center justify-center whitespace-nowrap rounded-full align-middle font-bold leading-none ring-1 ring-inset",
+        "inline-flex w-fit max-w-none shrink-0 items-center justify-center rounded-full align-middle leading-none font-bold whitespace-nowrap ring-1 ring-inset",
         sizeClassNames[size],
         toneClassNames[tone][variant],
         className,

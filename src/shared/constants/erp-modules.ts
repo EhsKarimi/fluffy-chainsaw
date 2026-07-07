@@ -33,7 +33,7 @@ import {
 } from "@tabler/icons-react";
 import { type ComponentType } from "react";
 
-import { PermissionKeys, type AuthRole, type PermissionKey } from "@/modules/auth/types/auth.types";
+import { type AuthRole, type PermissionKey, PermissionKeys } from "@/modules/auth/types/auth.types";
 import { type NavigationPath } from "@/shared/types/navigation.types";
 
 type ErpModuleSubmenu = {

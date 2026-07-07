@@ -122,11 +122,7 @@ const mantineCountyOptionsByProvinceId = countyOptionsByProvinceId.map((options,
 });
 
 function normalizeLocationName(value: string) {
-  return value
-    .replace(/ي/g, "ی")
-    .replace(/ك/g, "ک")
-    .replace(/\s+/g, " ")
-    .trim();
+  return value.replace(/ي/g, "ی").replace(/ك/g, "ک").replace(/\s+/g, " ").trim();
 }
 
 export function getCountyOptions(provinceId: number | null) {

@@ -1,15 +1,4 @@
-export const atisCyan = [
-  "#e9fbfc",
-  "#d3f6f8",
-  "#a6ecf1",
-  "#76e0e8",
-  "#52d4dd",
-  "#37C0C8",
-  "#2faab2",
-  "#26878e",
-  "#206d73",
-  "#1e5a5f",
-] as const;
+export const atisCyan = ["#e9fbfc", "#d3f6f8", "#a6ecf1", "#76e0e8", "#52d4dd", "#37C0C8", "#2faab2", "#26878e", "#206d73", "#1e5a5f"] as const;
 
 export const atisCyanTailwindPalette = {
   50: atisCyan[0],

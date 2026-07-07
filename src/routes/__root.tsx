@@ -1,6 +1,6 @@
 import { Outlet, createRootRoute, useLocation } from "@tanstack/react-router";
-import { useEffect } from "react";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
+import { useEffect } from "react";
 
 import { RequireAuth } from "@/modules/auth/components/RequireAuth";
 import { AppDocumentTitle } from "@/shared/components/layout/AppDocumentTitle";

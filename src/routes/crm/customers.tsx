@@ -20,7 +20,7 @@ import { AppTable, type AppTableRowActions, createAppTableColumns } from "@/shar
 import { AppBadge } from "@/shared/components/ui/AppBadge";
 import { DeleteConfirmationModal } from "@/shared/components/ui/DeleteConfirmationModal";
 import { SharedTexts } from "@/shared/constants/SharedTexts";
-import { useAppExcelExport } from "@/shared/export";
+import { useAppExcelExport } from "@/shared/export/useAppExcelExport";
 import { useAppListPageBounds, useAppListRouteController } from "@/shared/list-state";
 import { getCountyName, getProvinceName } from "@/shared/utils/iran-location";
 

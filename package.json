@@ -10,7 +10,9 @@
     "preview": "vite preview",
     "prepare": "husky",
     "zip:ai": "node scripts/zip-for-ai.mjs",
-    "check-update-interactive": "ncu --interactive --format group"
+    "check-update-interactive": "ncu --interactive --format group",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "dependencies": {
     "@mantine/core": "^9.4.1",

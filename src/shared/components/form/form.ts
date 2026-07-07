@@ -7,8 +7,8 @@ import { PasswordInputField } from "@/shared/components/form/PasswordInputField"
 import { RadioGroupField } from "@/shared/components/form/RadioGroupField";
 import { SelectField } from "@/shared/components/form/SelectField";
 import { SubmitButton } from "@/shared/components/form/SubmitButton";
-import { TextareaField } from "@/shared/components/form/TextareaField";
 import { TextInputField } from "@/shared/components/form/TextInputField";
+import { TextareaField } from "@/shared/components/form/TextareaField";
 import { fieldContext, formContext } from "@/shared/components/form/form-context";
 
 export const appForm = createFormHook({

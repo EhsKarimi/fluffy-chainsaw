@@ -1,15 +1,8 @@
-import { PermissionKeys, type PermissionKey } from "@/modules/auth/types/auth.types";
+import { type PermissionKey, PermissionKeys } from "@/modules/auth/types/auth.types";
 import { SharedTexts } from "@/shared/constants/SharedTexts";
 
 export type AppCommandId =
-  | "dashboard-open"
-  | "customer-list"
-  | "customer-create"
-  | "project-list"
-  | "reports-open"
-  | "settings-users"
-  | "settings-roles"
-  | "profile-open";
+  "dashboard-open" | "customer-list" | "customer-create" | "project-list" | "reports-open" | "settings-users" | "settings-roles" | "profile-open";
 
 export type AppCommand = {
   id: AppCommandId;

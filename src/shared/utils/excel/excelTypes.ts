@@ -2,14 +2,7 @@
 import type { Cell, CellValue, Column, DataValidation, Worksheet } from "exceljs";
 
 export type ValidationOperator =
-  | "between"
-  | "notBetween"
-  | "equal"
-  | "notEqual"
-  | "greaterThan"
-  | "lessThan"
-  | "greaterThanOrEqual"
-  | "lessThanOrEqual";
+  "between" | "notBetween" | "equal" | "notEqual" | "greaterThan" | "lessThan" | "greaterThanOrEqual" | "lessThanOrEqual";
 
 export type ValidationFormula = string | number | Date;
 export type ListValue = string | number;
@@ -76,13 +69,7 @@ export type CustomValidation = ValidationBase & {
 };
 
 export type ValidationConfig =
-  | ListValidation
-  | DependentListValidation
-  | WholeValidation
-  | DecimalValidation
-  | TextLengthValidation
-  | DateValidation
-  | CustomValidation;
+  ListValidation | DependentListValidation | WholeValidation | DecimalValidation | TextLengthValidation | DateValidation | CustomValidation;
 
 export type ExportColumn = Omit<Partial<Column>, "key"> & {
   key?: string;

@@ -4,10 +4,10 @@ const errorTargetSelectors = [
   '[data-atis-field-error="true"]',
   '[aria-invalid="true"]',
   '[data-invalid="true"]',
-  '.mantine-InputWrapper-root:has(.mantine-InputWrapper-error) input',
-  '.mantine-InputWrapper-root:has(.mantine-InputWrapper-error) textarea',
+  ".mantine-InputWrapper-root:has(.mantine-InputWrapper-error) input",
+  ".mantine-InputWrapper-root:has(.mantine-InputWrapper-error) textarea",
   '.mantine-InputWrapper-root:has(.mantine-InputWrapper-error) [role="combobox"]',
-  '.border-red-600',
+  ".border-red-600",
 ] as const;
 
 function findFirstErrorTarget(formElement: HTMLFormElement): HTMLElement | null {
